@@ -275,7 +275,6 @@ Question: {input}
         try:
             reply = agent_executor.run(input=input, history=history, date=date)
         except ValueError as inst:
-            raise Exception(inst)
             print('ValueError:\n')
             print(inst)
             print("\n\Chat GPT Fallback\n")
