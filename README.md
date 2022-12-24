@@ -22,8 +22,12 @@ Once it's running, open up [http://127.0.0.1:9000/](http://127.0.0.1:9000/) and 
 ### Conversation with memory
 
 `hi, my name is bob`
+
 `Hi Bob! Nice to meet you! How can I help you today?`
+
 `what's the last letter of my name?`
+
+`b`
 
 ## Deploying
 
