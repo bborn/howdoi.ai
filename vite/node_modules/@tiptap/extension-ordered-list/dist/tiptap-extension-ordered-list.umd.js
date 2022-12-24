@@ -1,0 +1,76 @@
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@tiptap/core')) :
+  typeof define === 'function' && define.amd ? define(['exports', '@tiptap/core'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["@tiptap/extension-ordered-list"] = {}, global.core));
+})(this, (function (exports, core) { 'use strict';
+
+  const inputRegex = /^(\d+)\.\s$/;
+  const OrderedList = core.Node.create({
+      name: 'orderedList',
+      addOptions() {
+          return {
+              itemTypeName: 'listItem',
+              HTMLAttributes: {},
+          };
+      },
+      group: 'block list',
+      content() {
+          return `${this.options.itemTypeName}+`;
+      },
+      addAttributes() {
+          return {
+              start: {
+                  default: 1,
+                  parseHTML: element => {
+                      return element.hasAttribute('start')
+                          ? parseInt(element.getAttribute('start') || '', 10)
+                          : 1;
+                  },
+              },
+          };
+      },
+      parseHTML() {
+          return [
+              {
+                  tag: 'ol',
+              },
+          ];
+      },
+      renderHTML({ HTMLAttributes }) {
+          const { start, ...attributesWithoutStart } = HTMLAttributes;
+          return start === 1
+              ? ['ol', core.mergeAttributes(this.options.HTMLAttributes, attributesWithoutStart), 0]
+              : ['ol', core.mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+      },
+      addCommands() {
+          return {
+              toggleOrderedList: () => ({ commands }) => {
+                  return commands.toggleList(this.name, this.options.itemTypeName);
+              },
+          };
+      },
+      addKeyboardShortcuts() {
+          return {
+              'Mod-Shift-7': () => this.editor.commands.toggleOrderedList(),
+          };
+      },
+      addInputRules() {
+          return [
+              core.wrappingInputRule({
+                  find: inputRegex,
+                  type: this.type,
+                  getAttributes: match => ({ start: +match[1] }),
+                  joinPredicate: (match, node) => node.childCount + node.attrs.start === +match[1],
+              }),
+          ];
+      },
+  });
+
+  exports.OrderedList = OrderedList;
+  exports["default"] = OrderedList;
+  exports.inputRegex = inputRegex;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+}));
+//# sourceMappingURL=tiptap-extension-ordered-list.umd.js.map

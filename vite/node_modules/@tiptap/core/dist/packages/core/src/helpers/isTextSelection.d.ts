@@ -1,0 +1,2 @@
+import { TextSelection } from 'prosemirror-state';
+export declare function isTextSelection(value: unknown): value is TextSelection;

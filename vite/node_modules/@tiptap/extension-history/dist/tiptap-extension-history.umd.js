@@ -1,0 +1,48 @@
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@tiptap/core'), require('prosemirror-history')) :
+  typeof define === 'function' && define.amd ? define(['exports', '@tiptap/core', 'prosemirror-history'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["@tiptap/extension-history"] = {}, global.core, global.prosemirrorHistory));
+})(this, (function (exports, core, prosemirrorHistory) { 'use strict';
+
+  const History = core.Extension.create({
+      name: 'history',
+      addOptions() {
+          return {
+              depth: 100,
+              newGroupDelay: 500,
+          };
+      },
+      addCommands() {
+          return {
+              undo: () => ({ state, dispatch }) => {
+                  return prosemirrorHistory.undo(state, dispatch);
+              },
+              redo: () => ({ state, dispatch }) => {
+                  return prosemirrorHistory.redo(state, dispatch);
+              },
+          };
+      },
+      addProseMirrorPlugins() {
+          return [
+              prosemirrorHistory.history(this.options),
+          ];
+      },
+      addKeyboardShortcuts() {
+          return {
+              'Mod-z': () => this.editor.commands.undo(),
+              'Mod-y': () => this.editor.commands.redo(),
+              'Shift-Mod-z': () => this.editor.commands.redo(),
+              // Russian keyboard layouts
+              'Mod-я': () => this.editor.commands.undo(),
+              'Shift-Mod-я': () => this.editor.commands.redo(),
+          };
+      },
+  });
+
+  exports.History = History;
+  exports["default"] = History;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+}));
+//# sourceMappingURL=tiptap-extension-history.umd.js.map

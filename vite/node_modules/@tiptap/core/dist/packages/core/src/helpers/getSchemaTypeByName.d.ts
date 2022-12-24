@@ -1,0 +1,2 @@
+import { MarkType, NodeType, Schema } from 'prosemirror-model';
+export declare function getSchemaTypeByName(name: string, schema: Schema): NodeType | MarkType | null;

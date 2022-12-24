@@ -1,0 +1,12 @@
+import { RawCommands } from '../types';
+declare module '@tiptap/core' {
+    interface Commands<ReturnType> {
+        joinForward: {
+            /**
+             * Join two nodes forward.
+             */
+            joinForward: () => ReturnType;
+        };
+    }
+}
+export declare const joinForward: RawCommands['joinForward'];

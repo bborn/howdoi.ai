@@ -1,0 +1,2 @@
+import { NodeSelection } from 'prosemirror-state';
+export declare function isNodeSelection(value: unknown): value is NodeSelection;

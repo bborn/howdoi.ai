@@ -1,0 +1,3 @@
+import { MarkType } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+export declare function getMarkAttributes(state: EditorState, typeOrName: string | MarkType): Record<string, any>;

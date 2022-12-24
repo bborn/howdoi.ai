@@ -1,0 +1,3 @@
+import { Node as ProseMirrorNode } from 'prosemirror-model';
+import { NodeWithPos, Predicate } from '../types';
+export declare function findChildren(node: ProseMirrorNode, predicate: Predicate): NodeWithPos[];

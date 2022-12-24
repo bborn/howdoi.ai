@@ -1,0 +1,90 @@
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@tiptap/core')) :
+  typeof define === 'function' && define.amd ? define(['exports', '@tiptap/core'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["@tiptap/extension-italic"] = {}, global.core));
+})(this, (function (exports, core) { 'use strict';
+
+  const starInputRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))$/;
+  const starPasteRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))/g;
+  const underscoreInputRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))$/;
+  const underscorePasteRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))/g;
+  const Italic = core.Mark.create({
+      name: 'italic',
+      addOptions() {
+          return {
+              HTMLAttributes: {},
+          };
+      },
+      parseHTML() {
+          return [
+              {
+                  tag: 'em',
+              },
+              {
+                  tag: 'i',
+                  getAttrs: node => node.style.fontStyle !== 'normal' && null,
+              },
+              {
+                  style: 'font-style=italic',
+              },
+          ];
+      },
+      renderHTML({ HTMLAttributes }) {
+          return ['em', core.mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+      },
+      addCommands() {
+          return {
+              setItalic: () => ({ commands }) => {
+                  return commands.setMark(this.name);
+              },
+              toggleItalic: () => ({ commands }) => {
+                  return commands.toggleMark(this.name);
+              },
+              unsetItalic: () => ({ commands }) => {
+                  return commands.unsetMark(this.name);
+              },
+          };
+      },
+      addKeyboardShortcuts() {
+          return {
+              'Mod-i': () => this.editor.commands.toggleItalic(),
+              'Mod-I': () => this.editor.commands.toggleItalic(),
+          };
+      },
+      addInputRules() {
+          return [
+              core.markInputRule({
+                  find: starInputRegex,
+                  type: this.type,
+              }),
+              core.markInputRule({
+                  find: underscoreInputRegex,
+                  type: this.type,
+              }),
+          ];
+      },
+      addPasteRules() {
+          return [
+              core.markPasteRule({
+                  find: starPasteRegex,
+                  type: this.type,
+              }),
+              core.markPasteRule({
+                  find: underscorePasteRegex,
+                  type: this.type,
+              }),
+          ];
+      },
+  });
+
+  exports.Italic = Italic;
+  exports["default"] = Italic;
+  exports.starInputRegex = starInputRegex;
+  exports.starPasteRegex = starPasteRegex;
+  exports.underscoreInputRegex = underscoreInputRegex;
+  exports.underscorePasteRegex = underscorePasteRegex;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+}));
+//# sourceMappingURL=tiptap-extension-italic.umd.js.map

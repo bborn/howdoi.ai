@@ -1,0 +1,3 @@
+import { Schema } from 'prosemirror-model';
+import { Extensions } from '../types';
+export declare function getSchemaByResolvedExtensions(extensions: Extensions): Schema;

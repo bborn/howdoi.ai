@@ -1,0 +1,12 @@
+import { RawCommands } from '../types';
+declare module '@tiptap/core' {
+    interface Commands<ReturnType> {
+        joinBackward: {
+            /**
+             * Join two nodes backward.
+             */
+            joinBackward: () => ReturnType;
+        };
+    }
+}
+export declare const joinBackward: RawCommands['joinBackward'];

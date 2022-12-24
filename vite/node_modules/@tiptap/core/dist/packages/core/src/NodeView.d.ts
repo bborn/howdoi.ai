@@ -1,0 +1,27 @@
+import { Node as ProseMirrorNode } from 'prosemirror-model';
+import { Decoration, NodeView as ProseMirrorNodeView } from 'prosemirror-view';
+import { Editor as CoreEditor } from './Editor';
+import { Node } from './Node';
+import { NodeViewRendererOptions, NodeViewRendererProps } from './types';
+export declare class NodeView<Component, Editor extends CoreEditor = CoreEditor, Options extends NodeViewRendererOptions = NodeViewRendererOptions> implements ProseMirrorNodeView {
+    component: Component;
+    editor: Editor;
+    options: Options;
+    extension: Node;
+    node: ProseMirrorNode;
+    decorations: Decoration[];
+    getPos: any;
+    isDragging: boolean;
+    constructor(component: Component, props: NodeViewRendererProps, options?: Partial<Options>);
+    mount(): void;
+    get dom(): HTMLElement;
+    get contentDOM(): HTMLElement | null;
+    onDragStart(event: DragEvent): void;
+    stopEvent(event: Event): boolean;
+    ignoreMutation(mutation: MutationRecord | {
+        type: 'selection';
+        target: Element;
+    }): boolean;
+    updateAttributes(attributes: {}): void;
+    deleteNode(): void;
+}

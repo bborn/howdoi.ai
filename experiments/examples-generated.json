@@ -1,0 +1,29 @@
+[
+  {
+    "document": "I love to go for walks in the park. >>><<< I always make sure to bring my phone so I can take pictures.",
+    "operation": "insert",
+    "instruction": "add a section about bringing a water bottle",
+    "thought": "I need to insert text at >>><<<, using the instruction[add a section about bringing a water bottle]",
+    "action": "Replace[>>><<<] with new text about [add a section about bringing a water bottle]",
+    "edited_document": "I love to go for walks in the park. I always make sure to bring a water bottle and my phone so I can take pictures.",
+    "output": "I always make sure to bring a water bottle and"
+  },
+  {
+    "document": "I like to go for a walk in the park in the morning. >>><<< I always take my dog with me.",
+    "operation": "insert",
+    "instruction": "add a section about bringing a camera",
+    "thought": "I need to insert text at >>><<<, using the instruction[add a section about bringing a camera]",
+    "action": "Replace[>>><<<] with new text about [add a section about bringing a camera]",
+    "edited_document": "I like to go for a walk in the park in the morning. I always bring my camera to take pictures. I always take my dog with me.",
+    "output": "I always bring my camera to take pictures."
+  },
+  {
+    "document": "My friends and I love to go camping. >>><<< We like to bring a lot of snacks and drinks to make sure we stay energized.",
+    "operation": "insert",
+    "instruction": "add a section about bringing a tent",
+    "thought": "I need to insert text at >>><<<, using the instruction[add a section about bringing a tent]",
+    "action": "Replace[>>><<<] with new text about [add a section about bringing a tent]",
+    "edited_document": "My friends and I love to go camping. We always bring a tent so that we can sleep comfortably. We like to bring a lot of snacks and drinks to make sure we stay energized.",
+    "output": "We always bring a tent so that we can sleep comfortably."
+  }
+]

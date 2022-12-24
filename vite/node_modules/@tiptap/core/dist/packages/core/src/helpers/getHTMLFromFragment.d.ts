@@ -1,0 +1,2 @@
+import { Fragment, Schema } from 'prosemirror-model';
+export declare function getHTMLFromFragment(fragment: Fragment, schema: Schema): string;

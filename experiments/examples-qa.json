@@ -1,0 +1,102 @@
+[
+  {
+    "document": "I was so excited to go to the park today. >>><<< I couldn't wait to explore the trails and see the wildlife.",
+    "operation": "insert",
+    "instruction": "describe what I was wearing",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what I was wearing]",
+    "action": "Replace[>>><<<] with new text about [describe what I was wearing]",
+    "edited_document": "I was so excited to go to the park today. I was wearing my favorite hiking boots and a comfortable t-shirt. I couldn't wait to explore the trails and see the wildlife.",
+    "output": "I was wearing my favorite hiking boots and a comfortable t-shirt.",
+    "text": " APPROPRIATE"
+  },
+  {
+    "document": "I love to go camping in the summer. >>><<< I always bring my tent, sleeping bag, and a few snacks.",
+    "operation": "insert",
+    "instruction": "describe what else I bring",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what else I bring]",
+    "action": "Replace[>>><<<] with new text about [describe what else I bring]",
+    "edited_document": "I love to go camping in the summer. I always bring my tent, sleeping bag, a flashlight, and a few snacks.",
+    "output": "a flashlight, and",
+    "text": " APPROPRIATE"
+  },
+  {
+    "document": "I was so excited to go to the park today. >>><<< I couldn't wait to explore the trails and see the wildlife.",
+    "operation": "insert",
+    "instruction": "describe what I brought with me",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what I brought with me]",
+    "action": "Replace[>>><<<] with new text about [describe what I brought with me]",
+    "edited_document": "I was so excited to go to the park today. I brought my camera, binoculars, and a picnic lunch. I couldn't wait to explore the trails and see the wildlife.",
+    "output": "I brought my camera, binoculars, and a picnic lunch.",
+    "text": " APPROPRIATE"
+  },
+  {
+    "document": "I was so excited to go to the park today. >>><<< I couldn't wait to explore the trails and see the wildlife.",
+    "operation": "insert",
+    "instruction": "describe what I brought with me",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what I brought with me]",
+    "action": "Replace[>>><<<] with new text about [describe what I brought with me]",
+    "edited_document": "I was so excited to go to the park today. I brought my camera, binoculars, and a picnic lunch. I couldn't wait to explore the trails and see the wildlife.",
+    "output": "I brought my camera, binoculars, and a picnic lunch.",
+    "text": " APPROPRIATE"
+  },
+  {
+    "document": "I was so excited to go to the park today. >>><<< I couldn't wait to explore the trails and see the wildlife.",
+    "operation": "insert",
+    "instruction": "describe what I brought with me",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what I brought with me]",
+    "action": "Replace[>>><<<] with new text about [describe what I brought with me]",
+    "edited_document": "I was so excited to go to the park today. I brought my camera, binoculars, and a picnic lunch. I couldn't wait to explore the trails and see the wildlife.",
+    "output": "I brought my camera, binoculars, and a picnic lunch.",
+    "text": " APPROPRIATE"
+  },
+  {
+    "document": "I was so excited to go to the park today. >>><<< I couldn't wait to explore the trails and see the wildlife.",
+    "operation": "insert",
+    "instruction": "describe what I brought with me",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what I brought with me]",
+    "action": "Replace[>>><<<] with new text about [describe what I brought with me]",
+    "edited_document": "I was so excited to go to the park today. I brought my camera, binoculars, and a picnic lunch. I couldn't wait to explore the trails and see the wildlife.",
+    "output": "I brought my camera, binoculars, and a picnic lunch.",
+    "text": " APPROPRIATE"
+  },
+  {
+    "document": "I love to go camping in the summer. >>><<< I always bring a tent, sleeping bag, and plenty of snacks.",
+    "operation": "insert",
+    "instruction": "describe what else I bring",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what else I bring]",
+    "action": "Replace[>>><<<] with new text about [describe what else I bring]",
+    "edited_document": "I love to go camping in the summer. I always bring a tent, sleeping bag, a flashlight, and plenty of snacks.",
+    "output": "a flashlight, and",
+    "text": " APPROPRIATE"
+  },
+  {
+    "document": "I was so excited to go to the park today. >>><<< I couldn't wait to explore the trails and see the wildlife.",
+    "operation": "insert",
+    "instruction": "describe what I brought with me",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what I brought with me]",
+    "action": "Replace[>>><<<] with new text about [describe what I brought with me]",
+    "edited_document": "I was so excited to go to the park today. I brought my camera, binoculars, and a picnic lunch. I couldn't wait to explore the trails and see the wildlife.",
+    "output": "I brought my camera, binoculars, and a picnic lunch.",
+    "text": " APPROPRIATE"
+  },
+  {
+    "document": "I was so excited to go to the park today. >>><<< I couldn't wait to explore the trails and see the wildlife.",
+    "operation": "insert",
+    "instruction": "describe what I brought with me",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what I brought with me]",
+    "action": "Replace[>>><<<] with new text about [describe what I brought with me]",
+    "edited_document": "I was so excited to go to the park today. I brought my camera, binoculars, and a picnic lunch. I couldn't wait to explore the trails and see the wildlife.",
+    "output": "I brought my camera, binoculars, and a picnic lunch.",
+    "text": " APPROPRIATE"
+  },
+  {
+    "document": "I was so excited to go to the park today. >>><<< I couldn't wait to explore the trails and see the wildlife.",
+    "operation": "insert",
+    "instruction": "describe what I brought with me",
+    "thought": "I need to insert text at >>><<<, using the instruction[describe what I brought with me]",
+    "action": "Replace[>>><<<] with new text about [describe what I brought with me]",
+    "edited_document": "I was so excited to go to the park today. I brought my camera, binoculars, and a picnic lunch. I couldn't wait to explore the trails and see the wildlife.",
+    "output": "I brought my camera, binoculars, and a picnic lunch.",
+    "text": " APPROPRIATE"
+  }
+]

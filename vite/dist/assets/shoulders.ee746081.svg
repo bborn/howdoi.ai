@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path d="M27,21L9,21C6.791,21 5,22.791 5,25L5,36L31,36L31,25C31,22.791 29.209,21 27,21Z" style="fill:rgb(146,104,202);fill-rule:nonzero;"/>
+    <rect x="10" y="27" width="1" height="9" style="fill:rgb(116,80,168);fill-rule:nonzero;"/>
+    <path d="M4.702,26.495L4.419,26.436L3.908,26.436C3.908,26.378 3.931,26.324 3.943,26.267C3.595,26.052 3.397,25.642 3.485,25.219C3.597,24.677 4.128,24.329 4.671,24.44L6.762,24.873L8.438,24.873C9.301,24.873 10,25.573 10,26.437L10,28L6.253,28C6.253,28 4.772,27.331 4.702,26.495Z" style="fill:rgb(144,96,62);fill-rule:nonzero;"/>
+    <path d="M0,25.655C0,25.223 0.35,24.873 0.781,24.873L5.471,25.655L9.218,25.655C9.65,25.655 9.999,26.006 9.999,26.436L9.999,28L5,28L0.781,26.437C0.781,26.437 0,26.087 0,25.655Z" style="fill:rgb(175,126,87);fill-rule:nonzero;"/>
+    <path d="M4,36L10,36L10,28L5,28L4,36Z" style="fill:rgb(146,104,202);fill-rule:nonzero;"/>
+    <rect x="25" y="27" width="1" height="9" style="fill:rgb(116,80,168);fill-rule:nonzero;"/>
+    <path d="M31.298,26.495L31.581,26.436L32.092,26.436C32.092,26.378 32.069,26.324 32.057,26.267C32.405,26.052 32.603,25.642 32.515,25.219C32.403,24.677 31.873,24.329 31.33,24.44L29.239,24.873L27.563,24.873C26.7,24.873 26.001,25.573 26.001,26.437L26.001,28L29.748,28C29.747,28 31.228,27.331 31.298,26.495Z" style="fill:rgb(144,96,62);fill-rule:nonzero;"/>
+    <path d="M36,25.655C36,25.223 35.65,24.873 35.219,24.873L30.528,25.655L26.781,25.655C26.349,25.655 26,26.006 26,26.436L26,28L31,28L35.219,26.437C35.219,26.437 36,26.087 36,25.655Z" style="fill:rgb(175,126,87);fill-rule:nonzero;"/>
+    <path d="M32,36L26,36L26,28L31,28L32,36Z" style="fill:rgb(146,104,202);fill-rule:nonzero;"/>
+</svg>

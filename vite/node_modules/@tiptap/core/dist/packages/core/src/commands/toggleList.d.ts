@@ -1,0 +1,13 @@
+import { NodeType } from 'prosemirror-model';
+import { RawCommands } from '../types';
+declare module '@tiptap/core' {
+    interface Commands<ReturnType> {
+        toggleList: {
+            /**
+             * Toggle between different list types.
+             */
+            toggleList: (listTypeOrName: string | NodeType, itemTypeOrName: string | NodeType) => ReturnType;
+        };
+    }
+}
+export declare const toggleList: RawCommands['toggleList'];

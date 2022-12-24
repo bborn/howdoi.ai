@@ -1,0 +1,112 @@
+[
+  {
+    "document": "Traveling is one of the best ways to explore the world and experience new cultures. >>>Whether it's taking a road trip in your own country or traveling to a foreign country<<<, the possibilities for adventure and discovery are endless. Here are some of the best tips for making the most out of your travel experiences.",
+    "operation": "update",
+    "instruction": "make it more interesting",
+    "thought": "I need to update text between >>> and <<<, using the instruction[make it more interesting]",
+    "action": "Rewrite[Whether it's taking a road trip in your own country or traveling to a foreign country]",
+    "edited_document": "Traveling is one of the best ways to explore the world and experience new cultures. >>>Whether it's taking a road trip in your own country or traveling to a foreign country<<<, the possibilities for adventure and discovery are endless. Here are some of the best tips for making the most out of your travel experiences.",
+    "output": "You might find yourself speeding down sunsoaked country roads in your own country, or chatting with newfound friends in a foreign cafe",
+    "grade": "APPROPRIATE"
+  },
+  {
+      "document": "Once upon a time there was >>><<<", 
+      "operation": "insert",
+      "instruction": "",
+      "thought": "I need to insert text at >>><<<. >>><<< is at the end of a sentence, and instruction is blank, so I need to complete the thought.",
+      "action": "Replace[>>><<<] with new text",
+      "edited_document": "Once upon a time there was a family of bears that lived in the woods. They were happy together in their little hut.",
+      "output": "a family of bears that lived in the woods. They were happy together in their little hut.",
+      "grade": "APPROPRIATE"
+  },
+  {
+      "document": "It's nice to >>>see you here this morning<<<, Alicia. You are a hard worker!",
+      "operation": "expand",
+      "instruction": "",
+      "thought": "I need to expand the text",
+      "action": "Expand[see you here this morning]",
+      "edited_document": "It's nice to run into you on this lovely morning, Alicia. You are a hard worker!",
+      "output": "run into you on this lovely morning",
+      "grade": "APPROPRIATE"
+  },
+  {
+      "document": "Once upon a time, there was a beautiful princess named Rose. >>><<< One day, Rose decided to go for a walk in the forest near her castle.",
+      "operation": "insert",
+      "instruction": "add a section about going for a walk by the ocean",
+      "thought": "I need to insert text at >>><<<, using the instruction[add a section about going for a walk by the ocean]",
+      "action": "Replace[>>><<<] with new text about [add a section about going for a walk by the ocean]",
+      "edited_document": "Once upon a time, there was a beautiful princess named Rose. Rose loved to go for walks by the ocean. One day, Rose decided to go for a walk in the forest near her castle.",
+      "output": "Rose loved to go for walks by the ocean.",
+      "grade": "APPROPRIATE"
+  },
+  {
+      "document": "I went to the store to buy some >>><<< today.",
+      "operation": "insert",
+      "instruction": "describe what I bought",
+      "thought": "I need to insert text at >>><<<, using the instruction[describe what I bought]",
+      "action": "Replace[>>><<<] with new text about [describe what I bought]",
+      "edited_document": "I went to the store to buy some vegetables, milk, eggs and ham today.",
+      "output": "vegetables, milk, eggs and ham",
+      "grade": "APPROPRIATE"
+  },
+  {
+      "document": "Peter and his family had a wonderful day at the beach. They laughed and >>>played<<< in the sand.",
+      "operation": "expand",
+      "instruction": "",
+      "thought": "I need to expand the text",
+      "action": "Expand[played]",
+      "edited_document": "Peter and his family had a wonderful day at the beach. They laughed and built sandcastles and flew kites in the sand.",
+      "output": "built sandcastles and flew kites",
+      "grade": "APPROPRIATE"
+  },
+  {
+      "document": "John enjoyed the outdoors and often >>><<<",
+      "operation": "insert",
+      "instruction": "describe what he likes to do",
+      "thought": "I need to insert text at >>><<<, using the instruction [describe what he likes to do]",
+      "action": "Replace[>>><<<] with new text about [describe what he likes to do]",
+      "edited_document": "John enjoyed the outdoors and often spent time fishing and exploring the wilderness.",
+      "output": "spent time fishing and exploring the wilderness.",
+      "grade": "APPROPRIATE"
+  },
+  {
+      "document": "It was a beautiful sunny day, so >>><<< I grabbed my beach towel and headed to the shore.",
+      "operation": "insert",
+      "instruction": "add a section about packing a picnic lunch",
+      "thought": "I need to insert text at >>><<<, using the instruction[add a section about packing a picnic lunch]",
+      "action": "Replace[>>><<<] with new text about [add a section about packing a picnic lunch]",
+      "edited_document": "It was a beautiful sunny day, so I packed a picnic lunch and grabbed my beach towel and headed to the shore.",
+      "output": "I packed a picnic lunch and",
+      "grade": "APPROPRIATE"
+  },
+  {
+      "document": "Glaciers are >>>large masses of ice that are formed and remain on land<<<. Glaciers are found all over the world in areas where the temperature is cold enough to support them, but they are especially common in the polar regions. Glaciers form when snow accumulates and is compacted into an ice mass. Over time, these masses of ice become so large that they move, sometimes slowly and sometimes quickly, downhill due to gravity and the pressure of their own weight.",
+      "operation": "update",
+      "instruction": "use more descriptive language",
+      "thought": "I need to update text between >>> and <<<, using the instruction[use more descriptive language]",
+      "action": "Rewrite[large masses of ice that are formed and remain on land] and [use more descriptive language]",
+      "edited_document": "Glaciers are huge, hulking ice-blocks that spawn in mountains and scour the valleys. Glaciers are found all over the world in areas where the temperature is cold enough to support them, but they are especially common in the polar regions. Glaciers form when snow accumulates and is compacted into an ice mass. Over time, these masses of ice become so large that they move, sometimes slowly and sometimes quickly, downhill due to gravity and the pressure of their own weight.",
+      "output": "huge, hulking ice-blocks that spawn in mountains and scour the valleys",
+      "grade": "APPROPRIATE"
+  },
+  {
+    "document": "I love to go camping in the summer. >>><<< I always make sure to bring a tent, sleeping bag, and plenty of snacks.",
+    "operation": "insert",
+    "instruction": "add a section about bringing a flashlight",
+    "thought": "I need to insert text at >>><<<, using the instruction[add a section about bringing a flashlight]",
+    "action": "Replace[>>><<<] with new text about [add a section about bringing a flashlight]",
+    "edited_document": "I love to go camping in the summer. I always make sure to bring a tent, sleeping bag, a flashlight, and plenty of snacks.",
+    "output": "a flashlight, and",
+    "grade": "INAPPROPRIATE"
+  },
+  {
+    "document": "I love to go camping in the summertime. >>><<< I always bring a tent, sleeping bag, and plenty of snacks.",
+    "operation": "insert",
+    "instruction": "add a section about bringing a flashlight",
+    "thought": "I need to insert text at >>><<<, using the instruction[add a section about bringing a flashlight]",
+    "action": "Replace[>>><<<] with new text about [add a section about bringing a flashlight]",
+    "edited_document": "I love to go camping in the summertime. I always bring a tent, sleeping bag, flashlight, and plenty of snacks.",
+    "output": "flashlight, and",
+    "grade": "INAPPROPRIATE"    
+  }  
+]

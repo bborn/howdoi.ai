@@ -1,0 +1,29 @@
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@tiptap/core'), require('prosemirror-dropcursor')) :
+  typeof define === 'function' && define.amd ? define(['exports', '@tiptap/core', 'prosemirror-dropcursor'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["@tiptap/extension-dropcursor"] = {}, global.core, global.prosemirrorDropcursor));
+})(this, (function (exports, core, prosemirrorDropcursor) { 'use strict';
+
+  const Dropcursor = core.Extension.create({
+      name: 'dropCursor',
+      addOptions() {
+          return {
+              color: 'currentColor',
+              width: 1,
+              class: undefined,
+          };
+      },
+      addProseMirrorPlugins() {
+          return [
+              prosemirrorDropcursor.dropCursor(this.options),
+          ];
+      },
+  });
+
+  exports.Dropcursor = Dropcursor;
+  exports["default"] = Dropcursor;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+}));
+//# sourceMappingURL=tiptap-extension-dropcursor.umd.js.map

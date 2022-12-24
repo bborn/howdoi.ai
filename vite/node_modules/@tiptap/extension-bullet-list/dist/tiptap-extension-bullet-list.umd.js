@@ -1,0 +1,57 @@
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@tiptap/core')) :
+  typeof define === 'function' && define.amd ? define(['exports', '@tiptap/core'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["@tiptap/extension-bullet-list"] = {}, global.core));
+})(this, (function (exports, core) { 'use strict';
+
+  const inputRegex = /^\s*([-+*])\s$/;
+  const BulletList = core.Node.create({
+      name: 'bulletList',
+      addOptions() {
+          return {
+              itemTypeName: 'listItem',
+              HTMLAttributes: {},
+          };
+      },
+      group: 'block list',
+      content() {
+          return `${this.options.itemTypeName}+`;
+      },
+      parseHTML() {
+          return [
+              { tag: 'ul' },
+          ];
+      },
+      renderHTML({ HTMLAttributes }) {
+          return ['ul', core.mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+      },
+      addCommands() {
+          return {
+              toggleBulletList: () => ({ commands }) => {
+                  return commands.toggleList(this.name, this.options.itemTypeName);
+              },
+          };
+      },
+      addKeyboardShortcuts() {
+          return {
+              'Mod-Shift-8': () => this.editor.commands.toggleBulletList(),
+          };
+      },
+      addInputRules() {
+          return [
+              core.wrappingInputRule({
+                  find: inputRegex,
+                  type: this.type,
+              }),
+          ];
+      },
+  });
+
+  exports.BulletList = BulletList;
+  exports["default"] = BulletList;
+  exports.inputRegex = inputRegex;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+}));
+//# sourceMappingURL=tiptap-extension-bullet-list.umd.js.map

@@ -1,0 +1,3 @@
+import { MarkType } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+export declare function isMarkActive(state: EditorState, typeOrName: MarkType | string | null, attributes?: Record<string, any>): boolean;

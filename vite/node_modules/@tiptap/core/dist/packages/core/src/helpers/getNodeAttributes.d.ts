@@ -1,0 +1,3 @@
+import { NodeType } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+export declare function getNodeAttributes(state: EditorState, typeOrName: string | NodeType): Record<string, any>;

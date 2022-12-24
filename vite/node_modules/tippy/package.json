@@ -1,0 +1,16 @@
+{
+  "name": "tippy",
+  "version": "0.0.0",
+  "description": "'new feature tip dialog'",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "new",
+    "feature",
+    "tooltip"
+  ],
+  "author": "jason Johnston",
+  "license": "ISC"
+}

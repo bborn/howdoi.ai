@@ -1,0 +1,4 @@
+# Modify this Procfile to fit your needs
+
+web: flask --debug run --port 9000
+vite: cd vite && yarn autobuild

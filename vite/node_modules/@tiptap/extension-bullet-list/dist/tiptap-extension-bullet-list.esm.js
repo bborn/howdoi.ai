@@ -1,0 +1,47 @@
+import { Node, mergeAttributes, wrappingInputRule } from '@tiptap/core';
+
+const inputRegex = /^\s*([-+*])\s$/;
+const BulletList = Node.create({
+    name: 'bulletList',
+    addOptions() {
+        return {
+            itemTypeName: 'listItem',
+            HTMLAttributes: {},
+        };
+    },
+    group: 'block list',
+    content() {
+        return `${this.options.itemTypeName}+`;
+    },
+    parseHTML() {
+        return [
+            { tag: 'ul' },
+        ];
+    },
+    renderHTML({ HTMLAttributes }) {
+        return ['ul', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+    },
+    addCommands() {
+        return {
+            toggleBulletList: () => ({ commands }) => {
+                return commands.toggleList(this.name, this.options.itemTypeName);
+            },
+        };
+    },
+    addKeyboardShortcuts() {
+        return {
+            'Mod-Shift-8': () => this.editor.commands.toggleBulletList(),
+        };
+    },
+    addInputRules() {
+        return [
+            wrappingInputRule({
+                find: inputRegex,
+                type: this.type,
+            }),
+        ];
+    },
+});
+
+export { BulletList, BulletList as default, inputRegex };
+//# sourceMappingURL=tiptap-extension-bullet-list.esm.js.map

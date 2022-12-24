@@ -1,0 +1,8 @@
+venv
+fly.toml
+.vscode
+__pycache__
+/.gtm/
+.env
+.ruby-version
+/vite/dist/assets

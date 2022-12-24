@@ -1,0 +1,81 @@
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@tiptap/core')) :
+  typeof define === 'function' && define.amd ? define(['exports', '@tiptap/core'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["@tiptap/extension-strike"] = {}, global.core));
+})(this, (function (exports, core) { 'use strict';
+
+  const inputRegex = /(?:^|\s)((?:~~)((?:[^~]+))(?:~~))$/;
+  const pasteRegex = /(?:^|\s)((?:~~)((?:[^~]+))(?:~~))/g;
+  const Strike = core.Mark.create({
+      name: 'strike',
+      addOptions() {
+          return {
+              HTMLAttributes: {},
+          };
+      },
+      parseHTML() {
+          return [
+              {
+                  tag: 's',
+              },
+              {
+                  tag: 'del',
+              },
+              {
+                  tag: 'strike',
+              },
+              {
+                  style: 'text-decoration',
+                  consuming: false,
+                  getAttrs: style => (style.includes('line-through') ? {} : false),
+              },
+          ];
+      },
+      renderHTML({ HTMLAttributes }) {
+          return ['s', core.mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+      },
+      addCommands() {
+          return {
+              setStrike: () => ({ commands }) => {
+                  return commands.setMark(this.name);
+              },
+              toggleStrike: () => ({ commands }) => {
+                  return commands.toggleMark(this.name);
+              },
+              unsetStrike: () => ({ commands }) => {
+                  return commands.unsetMark(this.name);
+              },
+          };
+      },
+      addKeyboardShortcuts() {
+          return {
+              'Mod-Shift-x': () => this.editor.commands.toggleStrike(),
+          };
+      },
+      addInputRules() {
+          return [
+              core.markInputRule({
+                  find: inputRegex,
+                  type: this.type,
+              }),
+          ];
+      },
+      addPasteRules() {
+          return [
+              core.markPasteRule({
+                  find: pasteRegex,
+                  type: this.type,
+              }),
+          ];
+      },
+  });
+
+  exports.Strike = Strike;
+  exports["default"] = Strike;
+  exports.inputRegex = inputRegex;
+  exports.pasteRegex = pasteRegex;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+}));
+//# sourceMappingURL=tiptap-extension-strike.umd.js.map
