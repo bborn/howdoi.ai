@@ -216,8 +216,7 @@ AI: This input is a """
         print("\nChat GPT Conversation\n")
         print("\n####\n")
 
-        reply = conversation_chain.predict(
-            input=input, date=date, history=history)
+        reply = conversation_chain.predict(input=input)
     elif (input_type == " question."):
 
         docstore = DocstoreExplorer(Wikipedia())
@@ -279,8 +278,7 @@ Question: {input}
             print(inst)
             print("\n\Chat GPT Fallback\n")
             print("\n\n####\n")
-            reply = conversation_chain.predict(
-                input=input, date=date, history=history)
+            reply = conversation_chain.predict(input=input)
 
     print("\n\n#### REPLY ####\n")
     print(reply)
