@@ -192,7 +192,7 @@ Final Answer: """
     )
 
     llm = OpenAI(temperature=.5, model="text-davinci-003")
-    decision_template = """You are an AI. Given an input from a human, it is your job determine whether the input is a question, a request, a greeting, or a statement.
+    decision_template = """You are an AI. Given an input from a human, it is your job determine whether the input is a question, a request, a greeting, or a statement, or a math problem.
 Human: {human_input}
 AI: This input is a """
 
@@ -218,7 +218,7 @@ AI: This input is a """
         print("\n####\n")
 
         reply = conversation_chain.predict(input=input)
-    elif (input_type == " question." or input_type == " request."):
+    elif (input_type == " question." or input_type == " request." or input_type == " math problem."):
 
         docstore = DocstoreExplorer(Wikipedia())
         llm = OpenAI(temperature=0, model="text-davinci-003")

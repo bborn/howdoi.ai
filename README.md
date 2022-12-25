@@ -21,13 +21,33 @@ Once it's running, open up [http://127.0.0.1:9000/](http://127.0.0.1:9000/) and 
 
 ### Conversation with memory
 
-`hi, my name is bob`
+Q: `hi, my name is bob`
 
-`Hi Bob! Nice to meet you! How can I help you today?`
+A: `Hi Bob! Nice to meet you! How can I help you today?`
 
-`what's the last letter of my name?`
+Q: `what's the last letter of my name?`
 
-`b`
+A: `b`
+
+Q: `show me a cat gif`
+
+A: `Here is a cat gif: <iframe src="https://giphy.com/embed/ICOgUNjpvO0PC" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><br /><a href="https://giphy.com/embed/ICOgUNjpvO0PC">powered by GIPHY</a>`
+
+Q: `actually, can you make it a dolphin?`
+
+A: `Here is a dolphin gif: <iframe src="https://giphy.com/embed/11ctq1pDmD3cB2" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><br /><a href="https://giphy.com/embed/11ctq1pDmD3cB2">powered by GIPHY</a>`
+
+### Movies
+
+Q: `what year was Dr. Strangelove released?`
+
+A: `Dr. Strangelove was released in 1964.`
+
+### Math
+
+Q: `what's the sum of the first six prime numbers?`
+
+A: `The sum of the first six prime numbers is 41.`
 
 ## Deploying
 
