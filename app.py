@@ -1,24 +1,23 @@
+from langchain.input import print_text
+from langchain.chains import LLMChain
+from langchain.vectorstores import FAISS
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.prompts.example_selector import SemanticSimilarityExampleSelector
+from langchain.prompts import load_prompt, FewShotPromptTemplate
+from langchain import LLMMathChain, SerpAPIWrapper, Wikipedia, OpenAI, PromptTemplate
+from langchain.agents.react.base import DocstoreExplorer
+from langchain.agents import ZeroShotAgent, Tool, AgentExecutor, get_all_tool_names, load_tools
+import logging
+import json
+from utils.giphy import GiphyAPIWrapper
 import os
 import sys
 from flask import Flask, render_template, jsonify, send_from_directory, request
 from datetime import datetime
-from langchain.agents import ZeroShotAgent, Tool, AgentExecutor, get_all_tool_names, load_tools
-from langchain.agents.react.base import DocstoreExplorer
-from langchain import LLMMathChain, SerpAPIWrapper, Wikipedia, OpenAI, PromptTemplate
-from langchain.prompts import load_prompt, FewShotPromptTemplate
-from langchain.prompts.example_selector import SemanticSimilarityExampleSelector
+import langchain
+from langchain.cache import InMemoryCache
+langchain.llm_cache = InMemoryCache()
 
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
-
-from langchain.chains import LLMChain
-
-from langchain.input import print_text
-
-from utils.giphy import GiphyAPIWrapper
-
-import json
-import logging
 
 logger = logging.getLogger()
 
@@ -171,6 +170,8 @@ Assistant is designed to be able to assist with a wide range of tasks, from answ
 
 Assistant is constantly learning and improving, and its capabilities are constantly evolving. It is able to process and understand large amounts of text, and can use this knowledge to provide accurate and informative responses to a wide range of questions. Additionally, Assistant is able to generate its own text based on the input it receives, allowing it to engage in discussions and provide explanations and descriptions on a wide range of topics.
 
+If Assistant can't provide a good response, it will truthfully answer that it can't help with the user's request.
+
 Overall, Assistant is a powerful tool that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist.
 
 The current date is {date}. Questions that refer to a specific date or time period will be interpreted relative to this date.
@@ -191,7 +192,7 @@ Final Answer: """
     )
 
     llm = OpenAI(temperature=.5, model="text-davinci-003")
-    decision_template = """You are an AI. Given an input from a human, it is your job determine whether the input is a question, a greeting, or a statement.
+    decision_template = """You are an AI. Given an input from a human, it is your job determine whether the input is a question, a request, a greeting, or a statement.
 Human: {human_input}
 AI: This input is a """
 
@@ -217,7 +218,7 @@ AI: This input is a """
         print("\n####\n")
 
         reply = conversation_chain.predict(input=input)
-    elif (input_type == " question."):
+    elif (input_type == " question." or input_type == " request."):
 
         docstore = DocstoreExplorer(Wikipedia())
         llm = OpenAI(temperature=0, model="text-davinci-003")
