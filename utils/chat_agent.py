@@ -51,10 +51,13 @@ class ChatAgent:
             input_variables=["requests_result"],
             template=template,
         )
-        chain = LLMRequestsChain(llm_chain=LLMChain(
-            llm=OpenAI(temperature=0),
-            prompt=PROMPT))
-        return chain
+
+        def lambda_func(input):
+            out = chain = LLMRequestsChain(llm_chain=LLMChain(
+                llm=OpenAI(temperature=0),
+                prompt=PROMPT)).run(input)
+            return out.strip()
+        return lambda_func
 
     def __init__(self, *, conversation_chain: LLMChain = None):
         # set up a Wikipedia docstore agent
@@ -104,7 +107,7 @@ class ChatAgent:
             ),
             Tool(
                 name="Requests",
-                func=requests_tool.run,
+                func=requests_tool,
                 description="A portal to the internet. Use this when you need to get specific content from a site. Input should be a specific url, and the output will be all the text on that page."
             )
         ]
