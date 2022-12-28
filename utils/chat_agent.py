@@ -5,10 +5,12 @@ import os
 from utils.giphy import GiphyAPIWrapper
 from dataclasses import dataclass
 
-from langchain.chains import LLMChain
+from langchain.chains import LLMChain, LLMRequestsChain
 from langchain import Wikipedia, OpenAI
 from langchain.agents.react.base import DocstoreExplorer
 from langchain.agents import ZeroShotAgent, Tool, AgentExecutor, get_all_tool_names, load_tools, initialize_agent
+from langchain.prompts import PromptTemplate
+
 
 import langchain
 from langchain.cache import InMemoryCache
@@ -40,6 +42,20 @@ class ChatAgent:
             docstore_tools, docstore_llm, agent="react-docstore", verbose=True)
         return docstore_agent
 
+    def _get_requests_llm_tool(self):
+
+        template = """
+        Extracted: {requests_result}"""
+
+        PROMPT = PromptTemplate(
+            input_variables=["requests_result"],
+            template=template,
+        )
+        chain = LLMRequestsChain(llm_chain=LLMChain(
+            llm=OpenAI(temperature=0),
+            prompt=PROMPT))
+        return chain
+
     def __init__(self, *, conversation_chain: LLMChain = None):
         # set up a Wikipedia docstore agent
         docstore_agent = self._get_docstore_agent()
@@ -49,6 +65,9 @@ class ChatAgent:
         tool_names = get_all_tool_names()
 
         tool_names.remove("pal-math")
+        tool_names.remove("requests")  # let's use the llm_requests instead
+
+        requests_tool = self._get_requests_llm_tool()
 
         tools = load_tools(tool_names,
                            llm=OpenAI(temperature=0, model="text-davinci-003"),
@@ -76,12 +95,17 @@ class ChatAgent:
             Tool(
                 name="Conversation",
                 func=conversation_chain_wrapper,
-                description="Useful for answering a wide range of questions, conversing with a human, writing text and code. Don't use it for questions relating to events after April 1, 2021. Input should be a complete sentence."
+                description="Useful for answering a wide range of questions, conversing with a human, brainstorming, and writing text and code. Don't use it to answer questions relating to events after April 1, 2021. Input should be a complete sentence."
             ),
             Tool(
                 name="GiphySearch",
                 func=giphy.run,
                 description="useful for when you need to find a gif or picture, and for randomly replying to a human"
+            ),
+            Tool(
+                name="Requests",
+                func=requests_tool.run,
+                description="A portal to the internet. Use this when you need to get specific content from a site. Input should be a specific url, and the output will be all the text on that page."
             )
         ]
 
