@@ -193,7 +193,7 @@ Final Answer: """
     # wrapper for when the conversation chain is used within an agent
     def conversation_chain_wrapper(input):
         out = conversation_chain.run(input)
-        return "Finish[{}]".format(out.strip())
+        return "Final Answer: {}".format(out.strip())
 
     decision_template = """You are an AI. Given an input from a human, it is your job determine whether the input is a question, a request, a greeting, or a statement, or a math problem.
 Human: {human_input}
@@ -246,11 +246,6 @@ AI: This input is a """
         tool_names = get_all_tool_names()
 
         tool_names.remove("pal-math")
-        tool_names.remove("serpapi")
-
-        def web_search_wrapper(input):
-            out = SerpAPIWrapper().run(input)
-            return "Finish[{}]".format(out.strip())
 
         tools = load_tools(tool_names,
                            llm=OpenAI(temperature=0, model="text-davinci-003"),
@@ -259,15 +254,12 @@ AI: This input is a """
 
         # Tweak some of the tool descriptions
         for tool in tools:
+            if tool.name == "Search":
+                tool.description = "Use this tool exclusively for questions relating to current events, or when you can't find an answer using any of the other tools."
             if tool.name == "Calculator":
                 tool.description = "Use this to solve numeric math questions and do arithmetic. Don't use it for general or abstract math questions."
 
         tools = tools + [
-            Tool(
-                name="Search",
-                description="Use this tool exclusively for questions relating to current events, or when you can't find an answer using any of the other tools.",
-                func=web_search_wrapper
-            ),
             Tool(
                 name="WikipediaSearch",
                 description="Useful for answering a wide range of factual, scientific, academic, political and historical questions.",
