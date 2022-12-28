@@ -6,7 +6,7 @@ from langchain.prompts.example_selector import SemanticSimilarityExampleSelector
 from langchain.prompts import load_prompt, FewShotPromptTemplate
 from langchain import LLMMathChain, SerpAPIWrapper, Wikipedia, OpenAI, PromptTemplate
 from langchain.agents.react.base import DocstoreExplorer
-from langchain.agents import ZeroShotAgent, Tool, AgentExecutor, get_all_tool_names, load_tools
+from langchain.agents import ZeroShotAgent, Tool, AgentExecutor, get_all_tool_names, load_tools, initialize_agent
 import logging
 import json
 from utils.giphy import GiphyAPIWrapper
@@ -61,7 +61,7 @@ def prompt():
 
     llm = OpenAI(temperature=.5)
 
-    f = open('examples-generated.json')
+    f = open('experiments/examples-generated.json')
     examples = json.load(f)
 
     example_prompt = PromptTemplate(
@@ -78,26 +78,25 @@ def prompt():
     )
 
     prompt_prefix = """
+You are an AI writing assistant. You can help make additions and updates to a wide variety of documents. 
 Edit the document below to complete the task. If you can't complete the task, say "ERROR: I'm sorry, I can't help with this."
 
 You should follow this format:
 
 Document: this is the original document.
 Operation: this is the operation the user wants you to perform.
-Instruction: this is the instruction given by the user. Use this to guide the Operation.
-Action: this is the action you need to take to complete this task. Should be one of [insert, remove, update, expand, or condense].
-Action Target: you should find the correct place in the document to complete the action. For insert, you should insert text at the insertion point marked >>><<<. For remove, update, expand, and condense, you should replace the selected text between >>> and <<<.
+Instruction: this is the instruction given by the user. Use this to guide the Operation.\
+Thought: You should always think about what to do.
+Action: this is the action you need to take to complete this task. Should be one of [insert, remove, update, expand, or condense]. 
 Edited Document: The document after you have applied the action to the Action Target.
 Output: Just the changed/new portion of the document (the difference between the Edited Document and the original Document). This is what you need to return.
-
-For example:
 """
 
     similar_prompt = FewShotPromptTemplate(
         # We provide an ExampleSelector instead of examples.
         example_selector=example_selector,
         example_prompt=example_prompt,
-        prefix=prompt_prefix,
+        prefix=prompt_prefix + "\nFor example:\n",
         suffix="###\n\nDocument: {input}\nOperation: {operation}\nInstruction: {instruction}\nThought:",
         input_variables=["input", "instruction", "operation"],
     )
@@ -107,7 +106,7 @@ For example:
 Document: {input}
 Operation: {operation}
 Instruction: {instruction}
-Action:
+Thought: 
     """
 
     zero_shot_prompt = PromptTemplate(
@@ -125,15 +124,15 @@ Action:
     except:
         completion = "I'm sorry, I can't help with this."
 
-    import betterprompt
-    perplexity = betterprompt.calculate_perplexity(similar_prompt.format(
-        input=input, instruction=instruction, operation=operation))
+    # # import betterprompt
+    # # perplexity = betterprompt.calculate_perplexity(similar_prompt.format(
+    # #     input=input, instruction=instruction, operation=operation))
 
-    print("\nPerplexity: ", 'blue')
-    print(perplexity, 'blue')
-    print('\n', 'blue')
+    # print("\nPerplexity: ", 'blue')
+    # print(perplexity, 'blue')
+    # print('\n', 'blue')
 
-    print(completion, 'pink')
+    print(completion)
 
     # check if the  last line of completion starts with Output:
     if completion.split('\n')[-1].startswith("Output:"):
@@ -191,7 +190,11 @@ Final Answer: """
         verbose=True,
     )
 
-    llm = OpenAI(temperature=.5, model="text-davinci-003")
+    # wrapper for when the conversation chain is used within an agent
+    def conversation_chain_wrapper(input):
+        out = conversation_chain.run(input)
+        return "Finish[{}]".format(out.strip())
+
     decision_template = """You are an AI. Given an input from a human, it is your job determine whether the input is a question, a request, a greeting, or a statement, or a math problem.
 Human: {human_input}
 AI: This input is a """
@@ -204,11 +207,13 @@ AI: This input is a """
     print(decision_prompt.format(human_input=json.get('prompt')))
 
     decision_chain = LLMChain(
-        llm=llm, prompt=decision_prompt)
+        llm=OpenAI(temperature=.5, model="text-davinci-003"),
+        prompt=decision_prompt)
 
     input_type = decision_chain.predict(
         human_input=json.get('prompt')
     )
+
     print(input_type)
     print("\n####\n")
 
@@ -217,25 +222,61 @@ AI: This input is a """
         print("\nChat GPT Conversation\n")
         print("\n####\n")
 
-        reply = conversation_chain.predict(input=input)
-    elif (input_type == " question." or input_type == " request." or input_type == " math problem."):
+        reply = conversation_chain.predict(input=input).strip()
+    else:
 
+        # set up a Wikipedia docstore agent
         docstore = DocstoreExplorer(Wikipedia())
-        llm = OpenAI(temperature=0, model="text-davinci-003")
-        search = SerpAPIWrapper()
-        llm_math_chain = LLMMathChain(llm=llm, verbose=True)
+        docstore_tools = [
+            Tool(
+                name="Search",
+                func=docstore.search
+            ),
+            Tool(
+                name="Lookup",
+                func=docstore.lookup
+            )
+        ]
+        docstore_llm = OpenAI(temperature=0, model_name="text-davinci-003")
+        docstore_agent = initialize_agent(
+            docstore_tools, docstore_llm, agent="react-docstore", verbose=True)
+
         giphy = GiphyAPIWrapper()
 
         tool_names = get_all_tool_names()
 
-        tools = load_tools(tool_names, llm=llm, news_api_key=news_api_key,
+        tool_names.remove("pal-math")
+        tool_names.remove("serpapi")
+
+        def web_search_wrapper(input):
+            out = SerpAPIWrapper().run(input)
+            return "Finish[{}]".format(out.strip())
+
+        tools = load_tools(tool_names,
+                           llm=OpenAI(temperature=0, model="text-davinci-003"),
+                           news_api_key=news_api_key,
                            tmdb_bearer_token=tmdb_bearer_token)
+
+        # Tweak some of the tool descriptions
+        for tool in tools:
+            if tool.name == "Calculator":
+                tool.description = "Use this to solve numeric math questions and do arithmetic. Don't use it for general or abstract math questions."
 
         tools = tools + [
             Tool(
+                name="Search",
+                description="Use this tool exclusively for questions relating to current events, or when you can't find an answer using any of the other tools.",
+                func=web_search_wrapper
+            ),
+            Tool(
+                name="WikipediaSearch",
+                description="Useful for answering a wide range of factual, scientific, academic, political and historical questions.",
+                func=docstore_agent.run
+            ),
+            Tool(
                 name="Conversation",
-                func=conversation_chain.run,
-                description="Useful for answering a wide range of questions, conversing with a human, responding to a greeting or statement, generating text and code."
+                func=conversation_chain_wrapper,
+                description="Useful for answering a wide range of questions, conversing with a human, responding to a greeting or statement, generating text and code. Don't use it for questions relating to events after April 1, 2021"
             ),
             Tool(
                 name="GiphySearch",
@@ -276,6 +317,7 @@ Question: {input}
             reply = agent_executor.run(input=input, history=history, date=date)
         except ValueError as inst:
             print('ValueError:\n')
+            raise Exception(inst)
             print(inst)
             print("\n\Chat GPT Fallback\n")
             print("\n\n####\n")
