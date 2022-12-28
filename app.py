@@ -309,7 +309,6 @@ Question: {input}
             reply = agent_executor.run(input=input, history=history, date=date)
         except ValueError as inst:
             print('ValueError:\n')
-            raise Exception(inst)
             print(inst)
             print("\n\Chat GPT Fallback\n")
             print("\n\n####\n")
@@ -322,5 +321,5 @@ Question: {input}
     sys.stdout.flush()
     return {
         'input': input,
-        'text': reply
+        'text': reply.strip()
     }
