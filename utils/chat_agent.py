@@ -76,7 +76,7 @@ class ChatAgent:
             Tool(
                 name="Conversation",
                 func=conversation_chain_wrapper,
-                description="Useful for answering a wide range of questions, conversing with a human, responding to a greeting or statement, generating text and code. Don't use it for questions relating to events after April 1, 2021. Input should be "
+                description="Useful for answering a wide range of questions, conversing with a human, writing text and code. Don't use it for questions relating to events after April 1, 2021. Input should be a complete sentence."
             ),
             Tool(
                 name="GiphySearch",
