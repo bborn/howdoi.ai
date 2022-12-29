@@ -138,4 +138,7 @@ Question: {input}
                               verbose=True)
 
         self.agent_executor = AgentExecutor.from_agent_and_tools(
-            agent=agent, tools=tools, verbose=True)
+            agent=agent,
+            tools=tools,
+            max_iterations=10,
+            verbose=True)
