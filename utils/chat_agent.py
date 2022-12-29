@@ -98,7 +98,7 @@ class ChatAgent:
             Tool(
                 name="Conversation",
                 func=conversation_chain_wrapper,
-                description="Useful for answering a wide range of questions, conversing with a human, brainstorming, and writing text and code. Don't use it to answer questions relating to events after April 1, 2021. Input should be a complete sentence."
+                description="Useful for answering a wide range of questions, conversing with a human, brainstorming, and writing text and code. Use it to answer most questions relating to events before 2021. Input should be a complete sentence."
             ),
             Tool(
                 name="GiphySearch",
@@ -140,5 +140,5 @@ Question: {input}
         self.agent_executor = AgentExecutor.from_agent_and_tools(
             agent=agent,
             tools=tools,
-            max_iterations=10,
+            max_iterations=5,
             verbose=True)
