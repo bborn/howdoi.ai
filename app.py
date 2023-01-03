@@ -8,6 +8,8 @@ from langchain import OpenAI, PromptTemplate
 from utils.chat_agent import ChatAgent
 import logging
 import json
+import re
+
 
 import sys
 from flask import Flask, send_from_directory, request
@@ -170,6 +172,8 @@ Overall, Assistant is a powerful tool that can help with a wide range of tasks a
 
 The current date is {date}. Questions that refer to a specific date or time period will be interpreted relative to this date.
 
+After you answer the question, you MUST to determine which langauge your answer is written in, and append the language code to the end of the Final Answer, within parentheses, like this (en-US).
+
 Conversation History: {history}
 Question: {{input}}
 Final Answer: """
@@ -231,8 +235,24 @@ AI: This input is a """
     print(reply)
     print("\n\n#### REPLY ####\n")
 
+    pattern = r'\(([a-z]{2}-[A-Z]{2})\)'
+
+    # Search for the pattern in the string
+    match = re.search(pattern, reply)
+
+    language = 'en-US'  # defaut
+    if match:
+        # Get the language code
+        language = match.group(1)
+
+        # Remove the language code from the reply
+        reply = re.sub(pattern, '', reply)
+
+    print("LANG: ", language)
+
     sys.stdout.flush()
     return {
         'input': input,
-        'text': reply.strip()
+        'text': reply.strip(),
+        'language': language
     }

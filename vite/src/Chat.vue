@@ -1,6 +1,8 @@
 <script>
 import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+const synth = window.speechSynthesis;
+const speechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
 
 import hljs from "highlight.js";
 import "highlight.js/styles/monokai-sublime.css";
@@ -37,6 +39,10 @@ export default {
   data() {
     let $this = this;
     return {
+      listening: false,
+      speaking: false,
+      browserLanguage: navigator.language || navigator.userLanguage,
+      recognition: null,
       focused: false,
       prompt: "",
       prompts: $this.debug ? dummyPrompts : [],
@@ -129,6 +135,13 @@ export default {
     // hljs.highlightAll();
   },
   computed: {
+    availableLanguages() {
+      return [
+        { name: "English", code: "en-US" },
+        { name: "Spanish", code: "es-ES" },
+        { name: "French", code: "fr-FR" },
+      ];
+    },
     selectedPrompt() {
       return this.prompts[this.selectedPromptIndex];
     },
@@ -159,6 +172,59 @@ export default {
     },
   },
   methods: {
+    stopSpeaking() {
+      synth.cancel();
+    },
+    stopListening() {
+      this.listening = false;
+      this.recognition.stop();
+    },
+    listen() {
+      if (this.listening) {
+        this.stopListening();
+        return;
+      }
+      synth.cancel();
+      const $this = this;
+      $this.listening = true;
+      $this.recognition = new speechRecognition();
+      $this.recognition.lang = $this.browserLanguage;
+
+      $this.recognition.start();
+      $this.recognition.onresult = function (event) {
+        const transcript = event.results[0][0].transcript;
+        $this.prompt = transcript;
+        $this.submitForm(transcript, true);
+        $this.listening = false;
+      };
+    },
+    speak(text, lang = "en-US") {
+      if (this.speaking) {
+        this.stopSpeaking();
+        return;
+      }
+      this.speaking = true;
+
+      const utterThis = new SpeechSynthesisUtterance(text);
+      utterThis.addEventListener("end", () => {
+        this.speaking = false;
+      });
+
+      const voices = synth.getVoices();
+
+      for (const voice of voices) {
+        if (!utterThis.voice) {
+          console.log(voice.lang);
+          if (voice.lang === lang) {
+            utterThis.voice = voice;
+            console.log(utterThis.voice.name);
+          }
+        }
+      }
+
+      console.log(lang);
+      synth.speak(utterThis);
+    },
     higlightCode() {
       document.querySelectorAll("pre code").forEach((el) => {
         hljs.highlightElement(el);
@@ -177,24 +243,7 @@ export default {
       )}%0A%0A${encodeURIComponent(response)}%0Awww.howdoi.ai`;
       window.open(url, "_blank");
     },
-    downloadResponseAsJpeg(promptIndex) {
-      this.selectedPromptIndex = promptIndex;
 
-      this.$nextTick(() => {
-        let element = this.$refs.currentPromptElement;
-
-        htmlToImage
-          .toJpeg(element, {
-            backgroundColor: "#ffffff",
-          })
-          .then(function (dataUrl) {
-            var link = document.createElement("a");
-            link.download = "prompt.jpeg";
-            link.href = dataUrl;
-            link.click();
-          });
-      });
-    },
     scrollToBottom() {
       this.$nextTick(() => {
         var promptElements = document.querySelectorAll(".prompt");
@@ -218,7 +267,7 @@ export default {
     clearPrompts() {
       this.prompts = [];
     },
-    submitForm() {
+    submitForm(_event, speakResponse = false) {
       this.loading = true;
       fetch("/chat", {
         method: "POST",
@@ -238,7 +287,12 @@ export default {
           this.prompts.push({
             prompt: this.prompt,
             response: json.text,
+            responseLanguage: json.language,
           });
+
+          if (speakResponse) {
+            this.speak(json.text, json.language);
+          }
 
           this.prompt = "";
           this.loading = false;
@@ -251,48 +305,44 @@ export default {
 
 <template>
   <div class="ui">
-    <div ref="currentPromptElement" v-if="selectedPrompt" style="display: none">
-      <h2 class="ui page header">
-        <a href="/">
-          <span class="emoji">
-            <em :data-emoji="shruggingType" class="medium"></em>
-          </span>
-
-          <span class="text">howdoi.ai </span>
-        </a>
-      </h2>
-
-      <table class="ui relaxed striped table">
-        <tr class="prompt">
-          <td class="collapsing">
-            <em data-emoji=":thinking:" class="medium"></em>
-          </td>
-          <td>
-            <p>
-              <span v-html="selectedPrompt.prompt" class="ui large text"></span>
-            </p>
-          </td>
-        </tr>
-        <tr class="hover-parent response">
-          <td class="collapsing top aligned">
-            <em data-emoji=":robot:" class="medium"></em>
-          </td>
-          <td class="top aligned">
-            <div>
-              <p>
-                <span
-                  v-html="selectedPrompt.response"
-                  style="white-space: pre-line"
-                  class="ui large text"
-                ></span>
-              </p>
-            </div>
-          </td>
-        </tr>
-      </table>
+    <div
+      v-if="listening"
+      class="ui active blurring page inverted content dimmer"
+      @click="stopListening"
+      style="z-index: 9999000"
+    >
+      <div class="content">
+        <h2 class="ui inverted icon header">
+          <i class="icon microphone" :class="{ red: listening }"></i>
+        </h2>
+      </div>
     </div>
 
-    <div id="userInput">
+    <div id="userInput" class="hover-parent">
+      <div class="ui simple dropdown icon hovering" style="float: right">
+        <i class="setting icon grey"></i>
+        <div class="menu">
+          <div class="header">
+            <div class="ui form">
+              <div class="field">
+                <label for="">I speak:</label>
+                <select v-model="browserLanguage" class="ui dropdown input">
+                  <option value="en-US">English</option>
+                  <option value="es-ES">Spanish</option>
+                  <option value="fr-FR">French</option>
+                  <option value="de-DE">German</option>
+                  <option value="it-IT">Italian</option>
+                  <option value="ja-JP">Japanese</option>
+                  <option value="ko-KR">Korean</option>
+                  <option value="pt-BR">Portuguese</option>
+                  <option value="ru-RU">Russian</option>
+                  <option value="zh-CN">Chinese</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <h1 class="ui page header">
         <a href="/">
           <span class="emoji">
@@ -311,10 +361,13 @@ export default {
         class="ui huge form bottom"
       >
         <div class="field">
-          <div class="ui right action input">
+          <div class="ui right action left icon input">
+            <i class="microphone icon link" @click="listen"></i>
             <input
               type="text"
               ref="input"
+              @keydown.esc.stop.prevent="stopListening"
+              @keydown.shift.space.exact.stop.prevent="listen"
               @keydown.tab="completePlaceholder"
               @keydown.meta.enter.exact.stop.prevent="submitForm"
               @keydown.enter.exact.stop.prevent="submitForm"
@@ -371,16 +424,24 @@ export default {
                 <div style="float: right">
                   <a
                     href="#"
-                    @click.stop="shareResponse(prompt)"
-                    class="hovering ui tertiary icon button"
+                    @click.stop.prevent="
+                      speak(prompt.response, prompt.responseLanguage)
+                    "
+                    class="hovering ui icon button"
                   >
-                    <i class="ui icon twitter"></i>
+                    <i
+                      class="ui icon"
+                      :class="{
+                        'volume up': !speaking,
+                        'red play': speaking,
+                      }"
+                    ></i>
                   </a>
 
                   <a
                     :href="`mailto: feedback@howdoi.ai?subject=Feedback: ${prompt.prompt}&body=${prompt.response}`"
                     data-tooltip="Not a good answer?"
-                    class="hovering ui tertiary icon button"
+                    class="hovering ui icon button"
                   >
                     <i class="icon thumbs down"></i>
                   </a>
@@ -420,11 +481,13 @@ p {
   line-height: 3em;
 }
 
-a.hovering {
+a.hovering,
+.dropdown.hovering {
   visibility: hidden;
 }
 
-.hover-parent:hover a.hovering {
+.hover-parent:hover a.hovering,
+.hover-parent:hover .dropdown.hovering {
   visibility: visible;
 }
 

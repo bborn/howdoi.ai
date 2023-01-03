@@ -69,6 +69,11 @@ class ChatAgent:
 
         tool_names.remove("pal-math")
         tool_names.remove("requests")  # let's use the llm_requests instead
+        # let's use the llm_requests instead
+        tool_names.remove("google-search")
+        tool_names.remove("pal-colored-objects")
+        tool_names.remove("python_repl")
+        tool_names.remove("terminal")
 
         requests_tool = self._get_requests_llm_tool()
 
@@ -84,26 +89,21 @@ class ChatAgent:
             if tool.name == "Calculator":
                 tool.description = "Use this to solve numeric math questions and do arithmetic. Don't use it for general or abstract math questions."
 
-        # wrapper for when the conversation chain is used within an agent
-        def conversation_chain_wrapper(input):
-            out = conversation_chain.run(input)
-            return "\nFinal Answer: " + out.strip()
-
         tools = tools + [
             Tool(
                 name="WikipediaSearch",
                 description="Useful for answering a wide range of factual, scientific, academic, political and historical questions.",
                 func=docstore_agent.run
             ),
-            Tool(
-                name="Conversation",
-                func=conversation_chain_wrapper,
-                description="Useful for answering a wide range of questions, conversing with a human, brainstorming, and writing text and code. Use it to answer most questions relating to events before 2021. Input should be a complete sentence."
-            ),
+            # Tool(
+            #     name="Conversation",
+            #     func=conversation_chain.run,
+            #     description="Useful for answering a wide range of questions, conversing with a human, brainstorming, and writing text and code. Use it to answer most questions relating to events before 2021. Input should be a complete sentence."
+            # ),
             Tool(
                 name="GiphySearch",
                 func=giphy.run,
-                description="useful for when you need to find a gif or picture, and for randomly replying to a human"
+                description="useful for when you need to find a gif or picture, and for adding humor to your replies. Input should be a query, and output will be an html embed code which you MUST include in your Final Answer."
             ),
             Tool(
                 name="Requests",
@@ -114,8 +114,20 @@ class ChatAgent:
 
         prefix = """
 The current date is {date}. Questions that refer to a specific date or time period will be interpreted relative to this date.
-Answer the following questions as best you can. You have access to the following tools (N=3): """
+Answer the following questions as best you can. 
+After you answer the question, you MUST to determine which langauge your answer is written in, and append the language code to the end of the Final Answer, within parentheses, like this (en-US).
+You have access to the following tools (N=3): """
         suffix = """
+
+You do NOT need to use these tools. For most normal conversation, you will not need to, and you can just respond directly to the Human.
+If an Observation contains "Final Answer:" you must return that as your response to the Human and skip other steps.
+
+When you have a response to say to the Human, you MUST use the format:
+
+```
+Assistant: [your response here]
+```
+
 Conversation History:
 {history}
 
