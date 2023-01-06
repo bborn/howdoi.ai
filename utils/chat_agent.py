@@ -10,6 +10,9 @@ from langchain import Wikipedia, OpenAI
 from langchain.agents.react.base import DocstoreExplorer
 from langchain.agents import ZeroShotAgent, Tool, AgentExecutor, get_all_tool_names, load_tools, initialize_agent
 from langchain.prompts import PromptTemplate
+from langchain.chains.conversation.memory import ConversationBufferMemory
+from langchain.agents.conversational.base import ConversationalAgent
+from datetime import datetime
 
 
 import langchain
@@ -59,7 +62,9 @@ class ChatAgent:
             return out.strip()
         return lambda_func
 
-    def __init__(self, *, conversation_chain: LLMChain = None):
+    def __init__(self, *, conversation_chain: LLMChain = None, history_array):
+        date = datetime.today().strftime('%B %d, %Y')
+
         # set up a Wikipedia docstore agent
         docstore_agent = self._get_docstore_agent()
 
@@ -95,11 +100,6 @@ class ChatAgent:
                 description="Useful for answering a wide range of factual, scientific, academic, political and historical questions.",
                 func=docstore_agent.run
             ),
-            # Tool(
-            #     name="Conversation",
-            #     func=conversation_chain.run,
-            #     description="Useful for answering a wide range of questions, conversing with a human, brainstorming, and writing text and code. Use it to answer most questions relating to events before 2021. Input should be a complete sentence."
-            # ),
             Tool(
                 name="GiphySearch",
                 func=giphy.run,
@@ -111,46 +111,69 @@ class ChatAgent:
                 description="A portal to the internet. Use this when you need to get specific content from a site. Input should be a specific url, and the output will be all the text on that page."
             )
         ]
+        ai_prefix = "AI"
+        human_prefix = "Human"
 
-        prefix = """
+        prefix = f"""{ai_prefix} is a large language model. {ai_prefix} is represented by a 🤖.
+
+{ai_prefix} uses a light, humorous tone, and {ai_prefix} frequently includes emojis its responses. Responses with code examples should be formatted in code blocks using <pre><code></code></pre> tags.
+
+{ai_prefix} is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, {ai_prefix} is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
+
+If {ai_prefix} can't provide a good response, it will truthfully answer that it can't help with the user's request.
+
+Overall, Assistant is a powerful tool that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist.
+
 The current date is {date}. Questions that refer to a specific date or time period will be interpreted relative to this date.
-Answer the following questions as best you can. 
+
+TOOLS:
+------
+
+Assistant has access to the following tools:
+"""
+
+        suffix = f"""
+Questions that refer to a specific date or time period will be interpreted relative to this date.
+
 After you answer the question, you MUST to determine which langauge your answer is written in, and append the language code to the end of the Final Answer, within parentheses, like this (en-US).
-You have access to the following tools (N=3): """
-        suffix = """
-
-You do NOT need to use these tools. For most normal conversation, you will not need to, and you can just respond directly to the Human.
-If an Observation contains "Final Answer:" you must return that as your response to the Human and skip other steps.
-
-When you have a response to say to the Human, you MUST use the format:
-
-```
-Assistant: [your response here]
-```
-
-Conversation History:
-{history}
 
 Begin!
 
-Question: {input}
-{agent_scratchpad}"""
+Previous conversation history:
+{{chat_history}}
 
-        prompt = ZeroShotAgent.create_prompt(
-            tools,
-            prefix=prefix,
-            suffix=suffix,
-            input_variables=["input", "agent_scratchpad", "date", "history"]
+New input: {{input}}
+{{agent_scratchpad}}
+"""
+
+        memory = ConversationBufferMemory(memory_key="chat_history")
+        for item in history_array:
+            memory.save_context(
+                {f"{ai_prefix}": item["prompt"]}, {f"{human_prefix}": item["response"]})
+
+        llm = OpenAI(temperature=.5, model="text-davinci-003")
+        llm_chain = LLMChain(
+            llm=llm,
+            prompt=ConversationalAgent.create_prompt(
+                tools,
+                ai_prefix=ai_prefix,
+                human_prefix=human_prefix,
+                suffix=suffix
+            ),
         )
 
-        llm_chain = LLMChain(llm=OpenAI(temperature=.5, model="text-davinci-003"),
-                             prompt=prompt, verbose=True)
-
-        agent = ZeroShotAgent(llm_chain=llm_chain, tools=tools,
-                              verbose=True)
+        agent_obj = ConversationalAgent(
+            llm_chain=llm_chain, ai_prefix=ai_prefix)
 
         self.agent_executor = AgentExecutor.from_agent_and_tools(
-            agent=agent,
+            agent=agent_obj,
             tools=tools,
+            verbose=True,
             max_iterations=5,
-            verbose=True)
+            memory=memory)
+
+        # self.agent_executor = AgentExecutor.from_agent_and_tools(
+        #     agent=agent,
+        #     tools=tools,
+        #     max_iterations=5,
+        #     verbose=True)

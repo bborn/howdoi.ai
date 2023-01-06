@@ -13,7 +13,6 @@ import re
 
 import sys
 from flask import Flask, send_from_directory, request
-from datetime import datetime
 
 import langchain
 from langchain.cache import InMemoryCache
@@ -149,95 +148,27 @@ Thought:
 
 @app.route('/chat', methods=['POST', 'GET'])
 def chat():
-    date = datetime.today().strftime('%B %d, %Y')
     json = request.get_json(force=True)
     history_array = json.get('history')
-    history = ""
-    for p in history_array:
-        history += "\nHuman: " + p['prompt'] + "\nAssistant: " + p['response']
 
     input = json.get('prompt')
 
-    conversation_template = f"""Assistant is a large language model. Assistant is represented by a 🤖.
+    chat_agent = ChatAgent(history_array=history_array)
 
-Assistant uses a light, humorous tone, and Assistant frequently includes emojis its responses. Responses with code examples should be formatted in code blocks using <pre><code></code></pre> tags.
+    try:
+        reply = chat_agent.agent_executor.run(input=input)
 
-Assistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, Assistant is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
-
-Assistant is constantly learning and improving, and its capabilities are constantly evolving. It is able to process and understand large amounts of text, and can use this knowledge to provide accurate and informative responses to a wide range of questions. Additionally, Assistant is able to generate its own text based on the input it receives, allowing it to engage in discussions and provide explanations and descriptions on a wide range of topics.
-
-If Assistant can't provide a good response, it will truthfully answer that it can't help with the user's request.
-
-Overall, Assistant is a powerful tool that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist.
-
-The current date is {date}. Questions that refer to a specific date or time period will be interpreted relative to this date.
-
-After you answer the question, you MUST to determine which langauge your answer is written in, and append the language code to the end of the Final Answer, within parentheses, like this (en-US).
-
-Conversation History: {history}
-Question: {{input}}
-Final Answer: """
-
-    conversation_prompt = PromptTemplate(
-        input_variables=["input"],
-        template=conversation_template
-    )
-
-    conversation_chain = LLMChain(
-        llm=OpenAI(temperature=0.5, model="text-davinci-003"),
-        prompt=conversation_prompt,
-        verbose=True,
-    )
-
-    decision_template = """You are an AI. Given an input from a human, it is your job determine whether the input is a question, a request, a greeting, or a statement, or a math problem.
-Human: {human_input}
-AI: This input is a """
-
-    decision_prompt = PromptTemplate(
-        input_variables=["human_input"], template=decision_template)
-
-    print("\n####\n")
-    print("\nDecision Prompt:\n")
-    print(decision_prompt.format(human_input=json.get('prompt')))
-
-    decision_chain = LLMChain(
-        llm=OpenAI(temperature=.5, model="text-davinci-003"),
-        prompt=decision_prompt)
-
-    input_type = decision_chain.predict(
-        human_input=json.get('prompt')
-    )
-
-    print(input_type)
-    print("\n####\n")
-
-    reply = ""
-    if (input_type == " statement." or input_type == " greeting."):
-        print("\nChat GPT Conversation\n")
-        print("\n####\n")
-
-        reply = conversation_chain.predict(input=input).strip()
-    else:
-
-        chat_agent = ChatAgent(conversation_chain=conversation_chain)
-
-        try:
-            reply = chat_agent.agent_executor.run(
-                input=input, history=history, date=date)
-        except ValueError as inst:
-            print('ValueError:\n')
-            print(inst)
-            print("\n\Chat GPT Fallback\n")
-            print("\n\n####\n")
-            reply = conversation_chain.predict(input=input)
+    except ValueError as inst:
+        print('ValueError:\n')
+        print(inst)
+        reply = "Sorry, there was an error processing your request."
 
     print("\n\n#### REPLY ####\n")
     print(reply)
     print("\n\n#### REPLY ####\n")
 
     pattern = r'\(([a-z]{2}-[A-Z]{2})\)'
-
-    # Search for the pattern in the string
+    # Search for the local pattern in the string
     match = re.search(pattern, reply)
 
     language = 'en-US'  # defaut
