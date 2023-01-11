@@ -152,6 +152,9 @@ def chat():
     history_array = json.get('history')
 
     input = json.get('prompt')
+    print("\n\n#### INPUT ####\n")
+    print(input)
+    print("\n\n#### INPUT ####\n")
 
     chat_agent = ChatAgent(history_array=history_array)
 
