@@ -152,7 +152,7 @@ New input: {{input}}
             memory.save_context(
                 {f"{ai_prefix}": item["prompt"]}, {f"{human_prefix}": item["response"]})
 
-        llm = OpenAI(temperature=.5, model="text-davinci-003")
+        llm = OpenAI(temperature=.5, model_name="text-davinci-003")
         llm_chain = LLMChain(
             llm=llm,
             prompt=ConversationalAgent.create_prompt(
