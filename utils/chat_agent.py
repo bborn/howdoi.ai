@@ -104,6 +104,7 @@ class ChatAgent:
             Tool(
                 name="GiphySearch",
                 func=giphy.run,
+                return_direct=True,
                 description="useful for when you need to find a gif or picture, and for adding humor to your replies. Input should be a query, and output will be an html embed code which you MUST include in your Final Answer."
             ),
             Tool(
