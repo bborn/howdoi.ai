@@ -11,7 +11,7 @@ First, add your API keys in the `.env` file.
 Then, install the Python requirements and start the app. You'll want a Procfile manager like [Foreman](https://github.com/ddollar/foreman) or [Hivemind](https://github.com/DarthSim/hivemind) installed.
 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 foreman start -f Procfile.local
 ```
 
