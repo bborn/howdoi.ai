@@ -1,3 +1,7 @@
+from langchain.cache import InMemoryCache
+import langchain
+from flask import Flask, send_from_directory, request, render_template
+import sys
 from langchain.chains import LLMChain
 from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
@@ -10,18 +14,19 @@ import logging
 import json
 import re
 
+import os
+from supabase import create_client, Client
+url: str = os.environ.get("SUPABASE_URL")
+key: str = os.environ.get("SUPABASE_KEY")
+supabase: Client = create_client(url, key)
 
-import sys
-from flask import Flask, send_from_directory, request
 
-import langchain
-from langchain.cache import InMemoryCache
 langchain.llm_cache = InMemoryCache()
 
 
 logger = logging.getLogger()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='vite/dist')
 app.config.from_object(__name__)
 if __name__ == '__main__':
     app.run(debug=True)
@@ -29,13 +34,18 @@ if __name__ == '__main__':
 
 @app.route('/write')
 def root():
-    return send_from_directory('./vite/dist', 'write.html')
+    return send_from_directory('vite/dist', 'write.html')
 
 
 @app.route('/')
-@app.route('/chat')
-def howdoi():
-    return send_from_directory('./vite/dist', 'howdoi.html')
+@app.route('/chat/<id>')
+def howdoi(id=None):
+    # return send_from_directory('./vite/dist', 'howdoi.html')
+    if id is None:
+        return render_template('howdoi.html')
+    else:
+        data = supabase.table("chats").select('*').eq('id', id).execute()
+        return render_template('howdoi.html', history=data.data[0])
 
 
 # Path for the rest of the static files (JS/CSS)
@@ -74,7 +84,7 @@ def prompt():
     )
 
     prompt_prefix = """
-You are an AI writing assistant. You can help make additions and updates to a wide variety of documents. 
+You are an AI writing assistant. You can help make additions and updates to a wide variety of documents.
 Edit the document below to complete the task. If you can't complete the task, say "ERROR: I'm sorry, I can't help with this."
 
 You should follow this format:
@@ -83,7 +93,7 @@ Document: this is the original document.
 Operation: this is the operation the user wants you to perform.
 Instruction: this is the instruction given by the user. Use this to guide the Operation.\
 Thought: You should always think about what to do.
-Action: this is the action you need to take to complete this task. Should be one of [insert, remove, update, expand, or condense]. 
+Action: this is the action you need to take to complete this task. Should be one of [insert, remove, update, expand, or condense].
 Edited Document: The document after you have applied the action to the Action Target.
 Output: Just the changed/new portion of the document (the difference between the Edited Document and the original Document). This is what you need to return.
 """
@@ -102,7 +112,7 @@ Output: Just the changed/new portion of the document (the difference between the
 Document: {input}
 Operation: {operation}
 Instruction: {instruction}
-Thought: 
+Thought:
     """
 
     zero_shot_prompt = PromptTemplate(
@@ -146,7 +156,23 @@ Thought:
     }, status
 
 
-@app.route('/chat', methods=['POST', 'GET'])
+@app.route('/save', methods=['POST', 'GET'])
+def save():
+    json = request.get_json(force=True)
+    chat_history = json.get('history')
+    data = supabase.table("chats").insert(
+        {"chat_history": chat_history}).execute()
+    return data.data[0]
+
+
+@app.route('/chat/<id>.json', methods=['GET'])
+def load_chat(id):
+    data = supabase.table("chats").select('*').eq('id', id).execute()
+
+    return data.data[0]
+
+
+@ app.route('/chat', methods=['POST', 'GET'])
 def chat():
     json = request.get_json(force=True)
     history_array = json.get('history')

@@ -9,5 +9,6 @@ import ResizeTextarea from "resize-textarea-vue3";
 
 createApp(Write).mount('#write')
 
-createApp(Chat).mount('#chat')
+const mountEl = document.querySelector("#chat");
+createApp(Chat, { ...mountEl.dataset }).mount('#chat')
 
