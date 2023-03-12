@@ -33,11 +33,13 @@ class ChatAgent:
         docstore_tools = [
             Tool(
                 name="Search",
-                func=docstore.search
+                func=docstore.search,
+                description="Search wikipedia"
             ),
             Tool(
                 name="Lookup",
-                func=docstore.lookup
+                func=docstore.lookup,
+                description="Lookup a wikipedia page"
             )
         ]
         docstore_llm = OpenAI(temperature=0, model_name="text-davinci-003")
@@ -70,15 +72,16 @@ class ChatAgent:
 
         giphy = GiphyAPIWrapper()
 
-        tool_names = get_all_tool_names()
-
-        tool_names.remove("pal-math")
-        tool_names.remove("requests")  # let's use the llm_requests instead
-        # let's use the llm_requests instead
-        tool_names.remove("google-search")
-        tool_names.remove("pal-colored-objects")
-        tool_names.remove("python_repl")
-        tool_names.remove("terminal")
+        # tool_names = get_all_tool_names()
+        tool_names = [
+            'serpapi',
+            'wolfram-alpha',
+            'llm-math',
+            'open-meteo-api',
+            'news-api',
+            'tmdb-api',
+            'wikipedia'
+        ]
 
         requests_tool = self._get_requests_llm_tool()
 
