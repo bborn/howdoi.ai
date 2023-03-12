@@ -129,8 +129,6 @@ If {ai_prefix} can't provide a good response, it will truthfully answer that it 
 
 Overall, Assistant is a powerful tool that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist.
 
-The current date is {date}. Questions that refer to a specific date or time period will be interpreted relative to this date.
-
 TOOLS:
 ------
 
@@ -138,6 +136,8 @@ Assistant has access to the following tools:
 """
 
         suffix = f"""
+The current date is {date}. Questions that refer to a specific date or time period will be interpreted relative to this date.
+
 Questions that refer to a specific date or time period will be interpreted relative to this date.
 
 After you answer the question, you MUST to determine which langauge your answer is written in, and append the language code to the end of the Final Answer, within parentheses, like this (en-US).
