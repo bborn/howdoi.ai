@@ -148,21 +148,6 @@ Thought:
     }, status
 
 
-@app.route('/save', methods=['POST', 'GET'])
-def save():
-    json = request.get_json(force=True)
-    chat_history = json.get('history')
-    data = supabase.table("chats").insert(
-        {"chat_history": chat_history}).execute()
-    return data.data[0]
-
-
-@app.route('/chat/<id>.json', methods=['GET'])
-def load_chat(id):
-    data = supabase.table("chats").select('*').eq('id', id).execute()
-
-    return data.data[0]
-
 
 @ app.route('/chat', methods=['POST', 'GET'])
 def chat():
