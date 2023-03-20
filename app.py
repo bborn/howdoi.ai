@@ -15,11 +15,6 @@ import json
 import re
 
 import os
-from supabase import create_client, Client
-url: str = os.environ.get("SUPABASE_URL")
-key: str = os.environ.get("SUPABASE_KEY")
-supabase: Client = create_client(url, key)
-
 
 langchain.llm_cache = InMemoryCache()
 
@@ -43,9 +38,6 @@ def howdoi(id=None):
     # return send_from_directory('./vite/dist', 'howdoi.html')
     if id is None:
         return render_template('howdoi.html')
-    else:
-        data = supabase.table("chats").select('*').eq('id', id).execute()
-        return render_template('howdoi.html', history=data.data[0])
 
 
 # Path for the rest of the static files (JS/CSS)
