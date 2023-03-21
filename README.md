@@ -8,12 +8,21 @@ This app relies on the amazing [LangChain Python library](https://langchain.read
 
 First, add your API keys in the `.env` file.
 
+Install the NPM requirements:
+
+```
+cd vite
+npm install (or yarn install)
+```
+
 Then, install the Python requirements and start the app. You'll want a Procfile manager like [Foreman](https://github.com/ddollar/foreman) or [Hivemind](https://github.com/DarthSim/hivemind) installed.
 
 ```
 pip install -r requirements.txt
 foreman start -f Procfile.local
 ```
+
+(Note: foreman isn't required. You can run the commands in the Procfile.local in separate terminal windows if you prefer)
 
 Once it's running, open up [http://127.0.0.1:9000/](http://127.0.0.1:9000/) and you'll be able to start interacting with the bot. There's also a writing assistant endpoint at [http://127.0.0.1:9000/write](http://127.0.0.1:9000/write).
 
