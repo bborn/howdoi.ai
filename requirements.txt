@@ -1,6 +1,6 @@
 Flask==2.2.2
 giphy_client==1.0.0
-langchain==0.0.107
+langchain==0.0.118
 pydantic==1.10.2
 supabase==1.0.2
 wikipedia
@@ -9,3 +9,4 @@ wolframalpha
 google-api-python-client
 google-search-results
 python-dotenv
+gunicorn
