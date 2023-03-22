@@ -58,9 +58,12 @@ class ChatAgent:
         )
 
         def lambda_func(input):
-            out = chain = LLMRequestsChain(llm_chain=LLMChain(
+            out = LLMRequestsChain(llm_chain=LLMChain(
                 llm=OpenAI(temperature=0),
-                prompt=PROMPT)).run(input)
+                prompt=PROMPT,
+                verbose=True
+            )
+            ).run(input)
             return out.strip()
         return lambda_func
 
@@ -87,7 +90,7 @@ class ChatAgent:
 
         tools = load_tools(tool_names,
                            llm=OpenAI(temperature=0,
-                                      model_name="gpt-3.5-turbo"),
+                                      model_name="gpt-3.5-turbo", verbose=True),
                            news_api_key=news_api_key,
                            tmdb_bearer_token=tmdb_bearer_token)
 
@@ -96,7 +99,7 @@ class ChatAgent:
             if tool.name == "Search":
                 tool.description = "Use this tool exclusively for questions relating to current events, or when you can't find an answer using any of the other tools."
             if tool.name == "Calculator":
-                tool.description = "Use this to solve numeric math questions and do arithmetic. Don't use it for general or abstract math questions."
+                tool.description = "Use this only to solve numeric math problems and to do arithmetic."
 
         tools = tools + [
             Tool(

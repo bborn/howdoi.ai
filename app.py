@@ -148,7 +148,6 @@ Thought:
     }, status
 
 
-
 @ app.route('/chat', methods=['POST', 'GET'])
 def chat():
     json = request.get_json(force=True)
@@ -166,7 +165,10 @@ def chat():
 
     except ValueError as inst:
         print('ValueError:\n')
+        import traceback
+        trace = str(traceback.format_exc())
         print(inst)
+        print(trace)
         reply = "Sorry, there was an error processing your request."
 
     print("\n\n#### REPLY ####\n")
