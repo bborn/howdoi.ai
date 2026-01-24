@@ -172,41 +172,50 @@ export class StepMap implements Mappable {
 export class Mapping implements Mappable {
   /// Create a new mapping with the given position maps.
   constructor(
-    /// The step maps in this mapping.
-    readonly maps: StepMap[] = [],
+    maps?: readonly StepMap[],
     /// @internal
     public mirror?: number[],
     /// The starting position in the `maps` array, used when `map` or
     /// `mapResult` is called.
     public from = 0,
     /// The end position in the `maps` array.
-    public to = maps.length
-  ) {}
+    public to = maps ? maps.length : 0
+  ) {
+    this._maps = (maps as StepMap[]) || []
+    this.ownData = !(maps || mirror)
+  }
+
+  /// The step maps in this mapping.
+  get maps(): readonly StepMap[] { return this._maps }
+
+  private _maps: StepMap[]
+  // False if maps/mirror are shared arrays that we shouldn't mutate
+  private ownData: boolean
 
   /// Create a mapping that maps only through a part of this one.
   slice(from = 0, to = this.maps.length) {
-    return new Mapping(this.maps, this.mirror, from, to)
-  }
-
-  /// @internal
-  copy() {
-    return new Mapping(this.maps.slice(), this.mirror && this.mirror.slice(), this.from, this.to)
+    return new Mapping(this._maps, this.mirror, from, to)
   }
 
   /// Add a step map to the end of this mapping. If `mirrors` is
   /// given, it should be the index of the step map that is the mirror
   /// image of this one.
   appendMap(map: StepMap, mirrors?: number) {
-    this.to = this.maps.push(map)
-    if (mirrors != null) this.setMirror(this.maps.length - 1, mirrors)
+    if (!this.ownData) {
+      this._maps = this._maps.slice()
+      this.mirror = this.mirror && this.mirror.slice()
+      this.ownData = true
+    }
+    this.to = this._maps.push(map)
+    if (mirrors != null) this.setMirror(this._maps.length - 1, mirrors)
   }
 
   /// Add all the step maps in a given mapping to this one (preserving
   /// mirroring information).
   appendMapping(mapping: Mapping) {
-    for (let i = 0, startSize = this.maps.length; i < mapping.maps.length; i++) {
+    for (let i = 0, startSize = this._maps.length; i < mapping._maps.length; i++) {
       let mirr = mapping.getMirror(i)
-      this.appendMap(mapping.maps[i], mirr != null && mirr < i ? startSize + mirr : undefined)
+      this.appendMap(mapping._maps[i], mirr != null && mirr < i ? startSize + mirr : undefined)
     }
   }
 
@@ -226,9 +235,9 @@ export class Mapping implements Mappable {
 
   /// Append the inverse of the given mapping to this one.
   appendMappingInverted(mapping: Mapping) {
-    for (let i = mapping.maps.length - 1, totalSize = this.maps.length + mapping.maps.length; i >= 0; i--) {
+    for (let i = mapping.maps.length - 1, totalSize = this._maps.length + mapping._maps.length; i >= 0; i--) {
       let mirr = mapping.getMirror(i)
-      this.appendMap(mapping.maps[i].invert(), mirr != null && mirr > i ? totalSize - mirr - 1 : undefined)
+      this.appendMap(mapping._maps[i].invert(), mirr != null && mirr > i ? totalSize - mirr - 1 : undefined)
     }
   }
 
@@ -243,7 +252,7 @@ export class Mapping implements Mappable {
   map(pos: number, assoc = 1) {
     if (this.mirror) return this._map(pos, assoc, true) as number
     for (let i = this.from; i < this.to; i++)
-      pos = this.maps[i].map(pos, assoc)
+      pos = this._maps[i].map(pos, assoc)
     return pos
   }
 
@@ -256,12 +265,12 @@ export class Mapping implements Mappable {
     let delInfo = 0
 
     for (let i = this.from; i < this.to; i++) {
-      let map = this.maps[i], result = map.mapResult(pos, assoc)
+      let map = this._maps[i], result = map.mapResult(pos, assoc)
       if (result.recover != null) {
         let corr = this.getMirror(i)
         if (corr != null && corr > i && corr < this.to) {
           i = corr
-          pos = this.maps[corr].recover(result.recover)
+          pos = this._maps[corr].recover(result.recover)
           continue
         }
       }

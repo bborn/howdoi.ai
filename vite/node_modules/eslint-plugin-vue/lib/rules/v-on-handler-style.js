@@ -179,11 +179,13 @@ module.exports = {
      */
     function verifyForInlineHandler(node, kind) {
       switch (kind) {
-        case 'method':
+        case 'method': {
           return verifyCanUseMethodHandlerForInlineHandler(node)
-        case 'inline-function':
+        }
+        case 'inline-function': {
           reportCanUseInlineFunctionForInlineHandler(node)
           return true
+        }
       }
       return false
     }
@@ -196,7 +198,7 @@ module.exports = {
     function reportForMethodHandler(node, kind) {
       switch (kind) {
         case 'inline':
-        case 'inline-function':
+        case 'inline-function': {
           context.report({
             node,
             messageId:
@@ -205,6 +207,7 @@ module.exports = {
                 : 'preferInlineFunctionOverMethod'
           })
           return true
+        }
       }
       // This path is currently not taken.
       return false
@@ -217,11 +220,13 @@ module.exports = {
      */
     function verifyForInlineFunction(node, kind) {
       switch (kind) {
-        case 'method':
+        case 'method': {
           return verifyCanUseMethodHandlerForInlineFunction(node)
-        case 'inline':
+        }
+        case 'inline': {
           reportCanUseInlineHandlerForInlineFunction(node)
           return true
+        }
       }
       return false
     }
@@ -231,7 +236,8 @@ module.exports = {
      * @param {VExpressionContainer} node
      */
     function getVExpressionContainerTokenInfo(node) {
-      const tokenStore = context.parserServices.getTemplateBodyTokenStore()
+      const sourceCode = context.getSourceCode()
+      const tokenStore = sourceCode.parserServices.getTemplateBodyTokenStore()
       const tokens = tokenStore.getTokens(node, {
         includeComments: true
       })
@@ -427,7 +433,9 @@ module.exports = {
             return
           }
           yield fixer.insertTextBeforeRange(rangeWithoutQuotes, '() => ')
-          const tokenStore = context.parserServices.getTemplateBodyTokenStore()
+          const sourceCode = context.getSourceCode()
+          const tokenStore =
+            sourceCode.parserServices.getTemplateBodyTokenStore()
           const firstToken = tokenStore.getFirstToken(node)
           const lastToken = tokenStore.getLastToken(node)
           if (firstToken.value === '{' && lastToken.value === '}') return
@@ -529,8 +537,9 @@ module.exports = {
               }
               break
             }
-            default:
+            default: {
               return
+            }
           }
         },
         ...(allows.includes('inline-function')

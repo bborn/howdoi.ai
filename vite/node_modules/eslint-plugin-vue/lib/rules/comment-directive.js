@@ -70,16 +70,16 @@ function parse(pattern, comment) {
  * @returns {void}
  */
 function enable(context, loc, group, rule) {
-  if (!rule) {
-    context.report({
-      loc,
-      messageId: group === 'block' ? 'enableBlock' : 'enableLine'
-    })
-  } else {
+  if (rule) {
     context.report({
       loc,
       messageId: group === 'block' ? 'enableBlockRule' : 'enableLineRule',
       data: { rule }
+    })
+  } else {
+    context.report({
+      loc,
+      messageId: group === 'block' ? 'enableBlock' : 'enableLine'
     })
   }
 }
@@ -94,17 +94,17 @@ function enable(context, loc, group, rule) {
  * @returns {void}
  */
 function disable(context, loc, group, rule, key) {
-  if (!rule) {
-    context.report({
-      loc,
-      messageId: group === 'block' ? 'disableBlock' : 'disableLine',
-      data: { key }
-    })
-  } else {
+  if (rule) {
     context.report({
       loc,
       messageId: group === 'block' ? 'disableBlockRule' : 'disableLineRule',
       data: { rule, key }
+    })
+  } else {
+    context.report({
+      loc,
+      messageId: group === 'block' ? 'disableBlock' : 'disableLine',
+      data: { key }
     })
   }
 }
@@ -313,9 +313,10 @@ module.exports = {
     const options = context.options[0] || {}
     /** @type {boolean} */
     const reportUnusedDisableDirectives = options.reportUnusedDisableDirectives
+    const sourceCode = context.getSourceCode()
     const documentFragment =
-      context.parserServices.getDocumentFragment &&
-      context.parserServices.getDocumentFragment()
+      sourceCode.parserServices.getDocumentFragment &&
+      sourceCode.parserServices.getDocumentFragment()
 
     return {
       Program(node) {

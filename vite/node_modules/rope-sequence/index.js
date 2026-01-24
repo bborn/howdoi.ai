@@ -187,4 +187,4 @@ class Append extends RopeSequence {
   }
 }
 
-module.exports = RopeSequence
+export default RopeSequence

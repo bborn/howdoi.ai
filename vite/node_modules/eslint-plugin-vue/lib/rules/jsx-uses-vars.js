@@ -30,7 +30,10 @@ SOFTWARE.
  */
 'use strict'
 
+const utils = require('../utils')
+
 module.exports = {
+  // eslint-disable-next-line eslint-plugin/prefer-message-ids
   meta: {
     type: 'problem',
     docs: {
@@ -62,7 +65,7 @@ module.exports = {
           return
         }
 
-        context.markVariableAsUsed(name)
+        utils.markVariableAsUsed(context, name, node)
       }
     }
   }

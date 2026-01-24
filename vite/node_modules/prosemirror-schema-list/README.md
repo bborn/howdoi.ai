@@ -1,6 +1,6 @@
 # prosemirror-schema-list
 
-[ [**WEBSITE**](https://prosemirror.net) | [**ISSUES**](https://github.com/prosemirror/prosemirror/issues) | [**FORUM**](https://discuss.prosemirror.net) | [**GITTER**](https://gitter.im/ProseMirror/prosemirror) | [**CHANGELOG**](https://github.com/ProseMirror/prosemirror-schema-list/blob/master/CHANGELOG.md) ]
+[ [**WEBSITE**](https://prosemirror.net) | [**ISSUES**](https://github.com/prosemirror/prosemirror/issues) | [**FORUM**](https://discuss.prosemirror.net) | [**CHANGELOG**](https://github.com/ProseMirror/prosemirror-schema-list/blob/master/CHANGELOG.md) ]
 
 This is a [schema module](https://prosemirror.net/docs/ref/#schema-list) for [ProseMirror](https://prosemirror.net).
 ProseMirror is a well-behaved rich semantic content editor based on

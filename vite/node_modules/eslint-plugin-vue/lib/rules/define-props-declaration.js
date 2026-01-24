@@ -15,15 +15,15 @@ module.exports = {
       url: 'https://eslint.vuejs.org/rules/define-props-declaration.html'
     },
     fixable: null,
-    messages: {
-      hasArg: 'Use type-based declaration instead of runtime declaration.',
-      hasTypeArg: 'Use runtime declaration instead of type-based declaration.'
-    },
     schema: [
       {
         enum: ['type-based', 'runtime']
       }
-    ]
+    ],
+    messages: {
+      hasArg: 'Use type-based declaration instead of runtime declaration.',
+      hasTypeArg: 'Use runtime declaration instead of type-based declaration.'
+    }
   },
   /** @param {RuleContext} context */
   create(context) {
@@ -36,7 +36,7 @@ module.exports = {
     return utils.defineScriptSetupVisitor(context, {
       onDefinePropsEnter(node) {
         switch (defineType) {
-          case 'type-based':
+          case 'type-based': {
             if (node.arguments.length > 0) {
               context.report({
                 node,
@@ -44,15 +44,19 @@ module.exports = {
               })
             }
             break
+          }
 
-          case 'runtime':
-            if (node.typeParameters && node.typeParameters.params.length > 0) {
+          case 'runtime': {
+            const typeArguments =
+              'typeArguments' in node ? node.typeArguments : node.typeParameters
+            if (typeArguments && typeArguments.params.length > 0) {
               context.report({
                 node,
                 messageId: 'hasTypeArg'
               })
             }
             break
+          }
         }
       }
     })

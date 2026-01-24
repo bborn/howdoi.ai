@@ -1,5 +1,5 @@
-var RopeSequence = require("./index")
-var assert = require("assert")
+import RopeSequence from "./index.js"
+import assert from "assert"
 
 function describe(rope) {
   if (rope.left) return "(" + describe(rope.left) + ", " + describe(rope.right) + ")"

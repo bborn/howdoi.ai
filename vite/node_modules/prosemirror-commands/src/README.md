@@ -25,6 +25,7 @@ These are mostly used to bind keys and define menu items.
 @createParagraphNear
 @liftEmptyBlock
 @splitBlock
+@splitBlockAs
 @splitBlockKeepMarks
 @selectParentNode
 @selectAll

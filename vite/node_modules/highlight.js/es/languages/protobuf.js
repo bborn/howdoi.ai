@@ -47,6 +47,7 @@ function protobuf(hljs) {
 
   return {
     name: 'Protocol Buffers',
+    aliases: ['proto'],
     keywords: {
       keyword: KEYWORDS,
       type: TYPES,

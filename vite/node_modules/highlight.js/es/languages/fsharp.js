@@ -75,6 +75,7 @@ Website: https://docs.microsoft.com/en-us/dotnet/fsharp/
 Category: functional
 */
 
+
 /** @type LanguageFn */
 function fsharp(hljs) {
   const KEYWORDS = [

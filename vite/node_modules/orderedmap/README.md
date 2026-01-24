@@ -62,5 +62,8 @@ appear in `map` after the keys in `map`.
 Create a map containing all the keys in this map that don't
 appear in `map`.
 
+**`toObject`**`() -> Object`
+Return an object that has the same key/value pairs as the `map`.
+
 **`size`**`: number`  
 The amount of keys in this map.

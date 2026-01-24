@@ -6,6 +6,6 @@ export {joinPoint, canJoin, canSplit, insertPoint, dropPoint, liftTarget, findWr
 export {StepMap, MapResult, Mapping, Mappable} from "./map"
 export {AddMarkStep, RemoveMarkStep, AddNodeMarkStep, RemoveNodeMarkStep} from "./mark_step"
 export {ReplaceStep, ReplaceAroundStep} from "./replace_step"
-export {AttrStep} from "./attr_step"
+export {AttrStep, DocAttrStep} from "./attr_step"
 import "./mark"
 export {replaceStep} from "./replace"

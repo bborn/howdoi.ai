@@ -3,10 +3,10 @@
  */
 'use strict'
 
-const { wrapCoreRule } = require('../utils')
+const { wrapStylisticOrCoreRule } = require('../utils')
 
-// eslint-disable-next-line no-invalid-meta, no-invalid-meta-docs-categories
-module.exports = wrapCoreRule('space-infix-ops', {
+// eslint-disable-next-line internal/no-invalid-meta
+module.exports = wrapStylisticOrCoreRule('space-infix-ops', {
   skipDynamicArguments: true,
   applyDocument: true
 })

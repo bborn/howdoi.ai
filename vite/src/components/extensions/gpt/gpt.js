@@ -1,10 +1,5 @@
 import { Extension } from '@tiptap/core'
 
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-import { Configuration, OpenAIApi } from "openai";
-
-
-
 function preparePrompt(editor, completionType = 'prompted') {
   var operation = "insert"
   var selectedText = window.getSelection().toString();
@@ -31,27 +26,16 @@ function preparePrompt(editor, completionType = 'prompted') {
     operation = "insert"
   }
 
-  var debug = false;
-  if (debug) {
-    var response = "DUMMY";
-    editor.chain().focus().insertContent(response).run();
-    return;
-  }
-
   console.log("Selected text: " + selectedText);
-  console.log("Anchor: " + anchor);
+  // console.log("Anchor: " + anchor);
   console.log("Prompt: " + userPrompt);
 
   // split the fullText into two parts: before and after the selectedText, or before and after the anchor if selectedText is empty
   var prefix = fullText.substring(0, anchor);
   var suffix = fullText.substring(anchor + selectedText.length);
 
-  console.log("Prefix: ", prefix)
-  console.log("Suffix: ", suffix)
-
-
   //if prefix ends in a trailing slash, remove it
-  if (prefix.endsWith("/")) {
+  if (prefix && prefix.endsWith("/")) {
     prefix = prefix.substring(0, prefix.length - 1);
   }
 
@@ -104,9 +88,7 @@ export const Gpt = Extension.create({
 
         this.storage.loading = true
         const { completePrompt, userPrompt, operation } = preparePrompt(this.editor, completionType)
-        console.log("Prompt: ", completePrompt);
-        console.log("userPrompt: ", userPrompt);
-
+        
         if (completePrompt) {
           completeSelection(completePrompt, userPrompt, operation)
             .then((response) => {
@@ -123,15 +105,9 @@ export const Gpt = Extension.create({
             })
             .catch((response) => {
               this.storage.loading = false
-              console.log(response.status, response.statusText);
-              response.json().then((json) => {
-                console.log(json);
-              })
-
-              $.toast({
-                class: 'error',
-                message: "Sorry, something went wrong"
-              })
+              console.log(response);
+              // Simple error notification
+              alert("Sorry, something went wrong");
             })
             ;
         } else {

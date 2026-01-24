@@ -51,3 +51,48 @@ export class AttrStep extends Step {
 }
 
 Step.jsonID("attr", AttrStep)
+
+/// Update an attribute in the doc node.
+export class DocAttrStep extends Step {
+  /// Construct an attribute step.
+  constructor(
+    /// The attribute to set.
+    readonly attr: string,
+    // The attribute's new value.
+    readonly value: any
+  ) {
+    super()
+  }
+
+  apply(doc: Node) {
+    let attrs = Object.create(null)
+    for (let name in doc.attrs) attrs[name] = doc.attrs[name]
+    attrs[this.attr] = this.value
+    let updated = doc.type.create(attrs, doc.content, doc.marks)
+    return StepResult.ok(updated)
+  }
+
+  getMap() {
+    return StepMap.empty
+  }
+
+  invert(doc: Node) {
+    return new DocAttrStep(this.attr, doc.attrs[this.attr])
+  }
+
+  map(mapping: Mappable) {
+    return this
+  }
+
+  toJSON(): any {
+    return {stepType: "docAttr", attr: this.attr, value: this.value}
+  }
+
+  static fromJSON(schema: Schema, json: any) {
+    if (typeof json.attr != "string")
+      throw new RangeError("Invalid input for DocAttrStep.fromJSON")
+    return new DocAttrStep(json.attr, json.value)
+  }
+}
+
+Step.jsonID("docAttr", DocAttrStep)

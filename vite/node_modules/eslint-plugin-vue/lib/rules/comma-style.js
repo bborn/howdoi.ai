@@ -3,16 +3,16 @@
  */
 'use strict'
 
-const { wrapCoreRule } = require('../utils')
+const { wrapStylisticOrCoreRule } = require('../utils')
 
-// eslint-disable-next-line no-invalid-meta, no-invalid-meta-docs-categories
-module.exports = wrapCoreRule('comma-style', {
-  create(_context, { coreHandlers }) {
+// eslint-disable-next-line internal/no-invalid-meta
+module.exports = wrapStylisticOrCoreRule('comma-style', {
+  create(_context, { baseHandlers }) {
     return {
       VSlotScopeExpression(node) {
-        if (coreHandlers.FunctionExpression) {
+        if (baseHandlers.FunctionExpression) {
           // @ts-expect-error -- Process params of VSlotScopeExpression as FunctionExpression.
-          coreHandlers.FunctionExpression(node)
+          baseHandlers.FunctionExpression(node)
         }
       }
     }

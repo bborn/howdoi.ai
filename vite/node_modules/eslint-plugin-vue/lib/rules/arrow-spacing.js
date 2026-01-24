@@ -3,7 +3,7 @@
  */
 'use strict'
 
-const { wrapCoreRule } = require('../utils')
+const { wrapStylisticOrCoreRule } = require('../utils')
 
-// eslint-disable-next-line no-invalid-meta, no-invalid-meta-docs-categories
-module.exports = wrapCoreRule('arrow-spacing')
+// eslint-disable-next-line internal/no-invalid-meta
+module.exports = wrapStylisticOrCoreRule('arrow-spacing')

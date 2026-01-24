@@ -4,10 +4,10 @@
  */
 'use strict'
 
-const { wrapCoreRule, flatten } = require('../utils')
+const { wrapStylisticOrCoreRule, flatten } = require('../utils')
 
-// eslint-disable-next-line no-invalid-meta, no-invalid-meta-docs-categories
-module.exports = wrapCoreRule('quote-props', {
+// eslint-disable-next-line internal/no-invalid-meta
+module.exports = wrapStylisticOrCoreRule('quote-props', {
   skipDynamicArguments: true,
   preprocess(context, { wrapContextToOverrideProperties, defineVisitor }) {
     const sourceCode = context.getSourceCode()

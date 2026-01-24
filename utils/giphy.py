@@ -1,14 +1,12 @@
 """Chain that calls GiphyAPi.
-
 """
 import os
 import sys
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Extra, root_validator
-
-from langchain.utils import get_from_dict_or_env
-
+# Use Pydantic v1 for LangChain compatibility if needed, or standard v2. 
+# LangChain often re-exports v1. Let's use standard pydantic and rely on compatibility.
+from pydantic import BaseModel, Field, model_validator
 
 class HiddenPrints:
     """Context manager to hide prints."""
@@ -25,34 +23,18 @@ class HiddenPrints:
 
 
 class GiphyAPIWrapper(BaseModel):
-    """Wrapper around Giphy API.
-
-    To use, you should have the environment variable ``GIPHY_API_KEY`` set with your API key, or pass
-    `giphyapi_api_key` as a named parameter to the constructor.
-
-    Example:
-        .. code-block:: python
-
-            from langchain import SerpAPIWrapper
-            serpapi = SerpAPIWrapper()
-    """
-
-    search_engine: Any  #: :meta private:
+    """Wrapper around Giphy API."""
 
     giphy_api_key: Optional[str] = None
+    giphy_engine: Any = None
 
-    class Config:
-        """Configuration for this pydantic object."""
-
-        extra = Extra.forbid
-
-    @root_validator()
+    @model_validator(mode='before')
+    @classmethod
     def validate_environment(cls, values: Dict) -> Dict:
         """Validate that api key and python package exists in environment."""
-        giphy_api_key = get_from_dict_or_env(
-            values, "giphy_api_key", "GIPHY_API_KEY"
-        )
+        giphy_api_key = values.get("giphy_api_key") or os.environ.get("GIPHY_API_KEY")
         values["giphy_api_key"] = giphy_api_key
+        
         try:
             import giphy_client
             from giphy_client.rest import ApiException
@@ -67,26 +49,30 @@ class GiphyAPIWrapper(BaseModel):
 
     def run(self, query: str) -> str:
         """Run query through GiphyAPI and parse result."""
-        api_key = self.giphy_api_key  # str | Giphy API Key.
-        q = query  # str | Search query term or prhase.
-        # int | The maximum number of records to return. (optional) (default to 25)
+        api_key = self.giphy_api_key
+        q = query
         limit = 5
-        # int | An optional results offset. Defaults to 0. (optional) (default to 0)
         offset = 0
-        rating = 'g'  # str | Filters results by specified rating. (optional)
-        # str | Specify default country for regional content; use a 2-letter ISO 639-1 country code. See list of supported languages <a href = \"../language-support\">here</a>. (optional)
+        rating = 'g'
         lang = 'en'
-        fmt = 'json'  # str | U
+        fmt = 'json'
+
+        if not self.giphy_engine:
+             import giphy_client
+             self.giphy_engine = giphy_client.DefaultApi()
 
         with HiddenPrints():
             try:
                 # Search Endpoint
                 api_response = self.giphy_engine.gifs_search_get(
                     api_key, q, limit=limit, offset=offset, rating=rating, lang=lang, fmt=fmt)
-            except ApiException as e:
-                raise ValueError(f"Got error from GiphyAPI: {e}")
+            except Exception as e:
+                # Return an error message instead of crashing
+                return f"Error fetching Giphy: {str(e)}"
 
-        # raise Exception(api_response.data[0].embed_url)
+        if not api_response.data:
+            return "No matching gif found."
+
         url = api_response.data[0].embed_url
 
         return f"""<iframe src="{url}" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><br /><a href="{url}">powered by GIPHY</a>"""

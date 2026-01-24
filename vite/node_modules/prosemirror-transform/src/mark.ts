@@ -72,18 +72,29 @@ export function removeMark(tr: Transform, from: number, to: number, mark?: Mark 
   matched.forEach(m => tr.step(new RemoveMarkStep(m.from, m.to, m.style)))
 }
 
-export function clearIncompatible(tr: Transform, pos: number, parentType: NodeType, match = parentType.contentMatch) {
+export function clearIncompatible(tr: Transform, pos: number, parentType: NodeType,
+                                  match = parentType.contentMatch,
+                                  clearNewlines = true) {
   let node = tr.doc.nodeAt(pos)!
-  let delSteps: Step[] = [], cur = pos + 1
+  let replSteps: Step[] = [], cur = pos + 1
   for (let i = 0; i < node.childCount; i++) {
     let child = node.child(i), end = cur + child.nodeSize
     let allowed = match.matchType(child.type)
     if (!allowed) {
-      delSteps.push(new ReplaceStep(cur, end, Slice.empty))
+      replSteps.push(new ReplaceStep(cur, end, Slice.empty))
     } else {
       match = allowed
       for (let j = 0; j < child.marks.length; j++) if (!parentType.allowsMarkType(child.marks[j].type))
         tr.step(new RemoveMarkStep(cur, end, child.marks[j]))
+
+      if (clearNewlines && child.isText && parentType.whitespace != "pre") {
+        let m, newline = /\r?\n|\r/g, slice
+        while (m = newline.exec(child.text!)) {
+          if (!slice) slice = new Slice(Fragment.from(parentType.schema.text(" ", parentType.allowedMarks(child.marks))),
+                                        0, 0)
+          replSteps.push(new ReplaceStep(cur + m.index, cur + m.index + m[0].length, slice))
+        }
+      }
     }
     cur = end
   }
@@ -91,5 +102,5 @@ export function clearIncompatible(tr: Transform, pos: number, parentType: NodeTy
     let fill = match.fillBefore(Fragment.empty, true)
     tr.replace(cur, cur, new Slice(fill!, 0, 0))
   }
-  for (let i = delSteps.length - 1; i >= 0; i--) tr.step(delSteps[i])
+  for (let i = replSteps.length - 1; i >= 0; i--) tr.step(replSteps[i])
 }

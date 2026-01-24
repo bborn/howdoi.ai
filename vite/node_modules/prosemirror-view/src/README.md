@@ -18,6 +18,10 @@ this module.
 
 @NodeView
 
+@MarkView
+
+@ViewMutationRecord
+
 @DOMEventMap
 
 ### Decorations

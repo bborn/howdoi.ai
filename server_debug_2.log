@@ -1,0 +1,32 @@
+/Users/bruno/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [36410]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:5001 (Press CTRL+C to quit)
+
+
+#### INPUT ####
+
+Hello, how are you?
+
+
+#### INPUT ####
+
+ValueError:
+
+1 validation error for GiphyAPIWrapper
+  Value error, Could not import giphy_client python package. Please it install it with `pip install giphy_client`. [type=value_error, input_value={'giphy_api_key': 'your_key_here'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/value_error
+Traceback (most recent call last):
+  File "/Users/bruno/Projects/rails/howdoi.ai/main.py", line 178, in chat
+    chat_agent = ChatAgent(history_array=history_array)
+  File "/Users/bruno/Projects/rails/howdoi.ai/utils/chat_agent.py", line 46, in __init__
+    giphy = GiphyAPIWrapper()
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for GiphyAPIWrapper
+  Value error, Could not import giphy_client python package. Please it install it with `pip install giphy_client`. [type=value_error, input_value={'giphy_api_key': 'your_key_here'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/value_error
+
+INFO:     127.0.0.1:52211 - "POST /chat HTTP/1.1" 500 Internal Server Error

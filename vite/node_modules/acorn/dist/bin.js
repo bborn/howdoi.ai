@@ -4,8 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var acorn = require('./acorn.js');
 
-function _interopNamespace(e) {
-  if (e && e.__esModule) return e;
+function _interopNamespaceDefault(e) {
   var n = Object.create(null);
   if (e) {
     Object.keys(e).forEach(function (k) {
@@ -18,11 +17,11 @@ function _interopNamespace(e) {
       }
     });
   }
-  n["default"] = e;
+  n.default = e;
   return Object.freeze(n);
 }
 
-var acorn__namespace = /*#__PURE__*/_interopNamespace(acorn);
+var acorn__namespace = /*#__PURE__*/_interopNamespaceDefault(acorn);
 
 var inputFilePaths = [], forceFileName = false, fileMode = false, silent = false, compact = false, tokenize = false;
 var options = {};
@@ -78,7 +77,7 @@ function run(codeList) {
     console.error(fileMode ? e.message.replace(/\(\d+:\d+\)$/, function (m) { return m.slice(0, 1) + inputFilePaths[fileIdx] + " " + m.slice(1); }) : e.message);
     process.exit(1);
   }
-  if (!silent) { console.log(JSON.stringify(result, null, compact ? null : 2)); }
+  if (!silent) { console.log(JSON.stringify(result, function (_, value) { return typeof value === "bigint" ? null : value; }, compact ? null : 2)); }
 }
 
 if (fileMode = inputFilePaths.length && (forceFileName || !inputFilePaths.includes("-") || inputFilePaths.length !== 1)) {

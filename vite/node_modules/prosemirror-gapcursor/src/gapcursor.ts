@@ -1,5 +1,5 @@
 import {Selection, NodeSelection} from "prosemirror-state"
-import {Slice, ResolvedPos, Node} from "prosemirror-model"
+import {Slice, ResolvedPos, Node, NodeType} from "prosemirror-model"
 import {Mappable} from "prosemirror-transform"
 
 /// Gap cursor selections are represented using this class. Its
@@ -103,6 +103,10 @@ class GapBookmark {
   }
 }
 
+function needsGap(type: NodeType) {
+  return type.isAtom || type.spec.isolating || type.spec.createGapCursor
+}
+
 function closedBefore($pos: ResolvedPos) {
   for (let d = $pos.depth; d >= 0; d--) {
     let index = $pos.index(d), parent = $pos.node(d)
@@ -113,7 +117,7 @@ function closedBefore($pos: ResolvedPos) {
     }
     // See if the node before (or its first ancestor) is closed
     for (let before = parent.child(index - 1);; before = before.lastChild!) {
-      if ((before.childCount == 0 && !before.inlineContent) || before.isAtom || before.type.spec.isolating) return true
+      if ((before.childCount == 0 && !before.inlineContent) || needsGap(before.type)) return true
       if (before.inlineContent) return false
     }
   }
@@ -129,7 +133,7 @@ function closedAfter($pos: ResolvedPos) {
       continue
     }
     for (let after = parent.child(index);; after = after.firstChild!) {
-      if ((after.childCount == 0 && !after.inlineContent) || after.isAtom || after.type.spec.isolating) return true
+      if ((after.childCount == 0 && !after.inlineContent) || needsGap(after.type)) return true
       if (after.inlineContent) return false
     }
   }

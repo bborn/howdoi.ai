@@ -1,0 +1,135 @@
+/Users/bruno/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [28498]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:5001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:56065 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+/Users/bruno/Projects/rails/howdoi.ai/utils/chat_agent.py:96: LangChainDeprecationWarning: The class `GoogleSearchAPIWrapper` was deprecated in LangChain 0.0.33 and will be removed in 1.0. An updated version of the class exists in the :class:`~langchain-google-community package and should be used instead. To use it run `pip install -U :class:`~langchain-google-community` and import as `from :class:`~langchain_google_community import GoogleSearchAPIWrapper``.
+  google_search = GoogleSearchAPIWrapper()
+/Users/bruno/Library/Python/3.9/lib/python/site-packages/google/api_core/_python_version_support.py:246: FutureWarning: You are using a non-supported Python version (3.9.6). Google will not post any further updates to google.api_core supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.10, and then update google.api_core.
+  warnings.warn(message, FutureWarning)
+/Users/bruno/Library/Python/3.9/lib/python/site-packages/google/auth/__init__.py:54: FutureWarning: 
+    You are using a Python version 3.9 past its end of life. Google will update
+    google-auth with critical bug fixes on a best-effort basis, but not
+    with any other fixes or features. Please upgrade your Python version,
+    and then update google-auth.
+    
+  warnings.warn(eol_message.format("3.9"), FutureWarning)
+/Users/bruno/Library/Python/3.9/lib/python/site-packages/google/oauth2/__init__.py:40: FutureWarning: 
+    You are using a Python version 3.9 past its end of life. Google will update
+    google-auth with critical bug fixes on a best-effort basis, but not
+    with any other fixes or features. Please upgrade your Python version,
+    and then update google-auth.
+    
+  warnings.warn(eol_message.format("3.9"), FutureWarning)
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+/Users/bruno/Projects/rails/howdoi.ai/utils/chat_agent.py:164: LangChainDeprecationWarning: Please see the migration guide at: https://python.langchain.com/docs/versions/migrating_memory/
+  memory = ConversationBufferMemory(memory_key="chat_history")
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+
+
+#### INPUT ####
+
+Hello
+
+
+#### INPUT ####
+
+
+
+[1m> Entering new AgentExecutor chain...[0m
+[32;1m[1;3mThought: Do I need to use a tool? No
+Final Answer: Hello! How can I assist you today? 🤖 (en-US)[0m
+
+[1m> Finished chain.[0m
+
+
+#### REPLY ####
+
+Hello! How can I assist you today? 🤖 (en-US)
+
+
+#### REPLY ####
+
+LANG:  en-US
+INFO:     127.0.0.1:54811 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63121 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63706 - "GET /assets/main-DWrRkq6J.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:63121 - "GET /assets/main-QuN8Aj2t.css HTTP/1.1" 304 Not Modified
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+
+
+#### INPUT ####
+
+hi
+
+
+#### INPUT ####
+
+
+
+[1m> Entering new AgentExecutor chain...[0m
+[32;1m[1;3mThought: Do I need to use a tool? No
+Final Answer: Hello! How can I assist you today? 🤖 (en-US)[0m
+
+[1m> Finished chain.[0m
+
+
+#### REPLY ####
+
+Hello! How can I assist you today? 🤖 (en-US)
+
+
+#### REPLY ####
+
+LANG:  en-US
+INFO:     127.0.0.1:63706 - "POST /chat HTTP/1.1" 200 OK
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+
+
+#### INPUT ####
+
+what is the sort of 4
+
+
+#### INPUT ####
+
+
+
+[1m> Entering new AgentExecutor chain...[0m
+[32;1m[1;3mThought: Do I need to use a tool? Yes
+Action: wolfram_alpha
+Action Input: "sort of 4"[0mValueError:
+
+asyncio.run() cannot be called from a running event loop
+Traceback (most recent call last):
+  File "/Users/bruno/Projects/rails/howdoi.ai/main.py", line 181, in chat
+    result = chat_agent.agent_executor.invoke({"input": input_text})
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/langchain/chains/base.py", line 165, in invoke
+    self._call(inputs, run_manager=run_manager)
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/langchain/agents/agent.py", line 1625, in _call
+    next_step_output = self._take_next_step(
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/langchain/agents/agent.py", line 1325, in _take_next_step
+    list(
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/langchain/agents/agent.py", line 1408, in _iter_next_step
+    yield self._perform_agent_action(
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/langchain/agents/agent.py", line 1433, in _perform_agent_action
+    observation = tool.run(
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/langchain_core/tools/base.py", line 895, in run
+    raise error_to_raise
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/langchain_core/tools/base.py", line 864, in run
+    response = context.run(self._run, *tool_args, **tool_kwargs)
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/langchain_community/tools/wolfram_alpha/tool.py", line 29, in _run
+    return self.api_wrapper.run(query)
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/langchain_community/utilities/wolfram_alpha.py", line 52, in run
+    res = self.wolfram_client.query(query)
+  File "/Users/bruno/Library/Python/3.9/lib/python/site-packages/wolframalpha/__init__.py", line 119, in query
+    return asyncio.run(self.aquery(input, params, **kwargs))
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 33, in run
+    raise RuntimeError(
+RuntimeError: asyncio.run() cannot be called from a running event loop
+
+INFO:     127.0.0.1:63706 - "POST /chat HTTP/1.1" 500 Internal Server Error
